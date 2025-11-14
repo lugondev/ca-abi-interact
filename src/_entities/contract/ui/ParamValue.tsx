@@ -3,6 +3,7 @@ import { TAbiParamType, TAbiParam } from "../model/types";
 import { AddressValue } from "@shared/ui/AddressValue";
 import { ValueDisplay } from "@shared/ui/ValueDisplay";
 import { JsonDisplay } from "@shared/ui/JsonDisplay";
+import { Uint256ValueDisplay } from "@shared/ui/Uint256ValueDisplay";
 import { TAddress, TChainId } from "@shared/lib/web3";
 import { TupleValue } from "./TupleValue";
 
@@ -79,6 +80,17 @@ export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl,
   }
 
   const stringValue = String(value);
+
+  // Check if this is a uint256 type (or uint without size, which defaults to uint256)
+  // Also support uint types that are 256 bits or larger
+  const isUint256 = abiType === "uint256" || abiType === "uint" || 
+    (abiType.startsWith("uint") && !abiType.includes("[") && 
+     abiType.match(/^uint\d+$/) && parseInt(abiType.replace("uint", "")) === 256);
+
+  // For uint256 values, use Uint256ValueDisplay with unit conversion
+  if (isUint256) {
+    return <Uint256ValueDisplay value={value as string | bigint | number} />;
+  }
 
   // For long values, use ValueDisplay with copy functionality
   if (stringValue.length > 50 || abiType.includes("uint") || abiType.includes("bytes")) {
