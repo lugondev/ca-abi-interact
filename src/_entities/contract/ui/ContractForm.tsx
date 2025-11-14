@@ -17,7 +17,12 @@ export const ContractForm = ({ buttonText, value, onSubmit }: TProps) => {
 
   const initialValue = value || { chain, abi: [], name: "", address: "" };
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    chain: number;
+    name: string;
+    address: string;
+    abi: string;
+  }>({
     chain: initialValue.chain,
     name: initialValue.name,
     address: initialValue.address,
@@ -51,7 +56,7 @@ export const ContractForm = ({ buttonText, value, onSubmit }: TProps) => {
     onSubmit({
       chain: formData.chain,
       name: formData.name,
-      address: formData.address,
+      address: formData.address as `0x${string}`,
       abi: JSON.parse(formData.abi),
     });
   };

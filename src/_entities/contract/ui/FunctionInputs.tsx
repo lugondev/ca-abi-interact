@@ -15,7 +15,8 @@ export const FunctionInputs = ({ abiItem, onSubmit, buttonText }: TProps) => {
   const [values, setValues] = useState<Record<number, string>>(() => {
     const initialValues: Record<number, string> = {};
     abiItem.inputs.forEach((input, index) => {
-      initialValues[index] = getDefaultValue(input.type);
+      const defaultValue = getDefaultValue(input.type);
+      initialValues[index] = Array.isArray(defaultValue) ? JSON.stringify(defaultValue) : String(defaultValue);
     });
     return initialValues;
   });

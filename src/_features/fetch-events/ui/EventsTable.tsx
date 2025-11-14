@@ -41,7 +41,9 @@ export const EventsTable = ({ chain, event, items, loading }: TProps) => {
           {items.map((item, idx) => (
             <TableRow key={`${item.transactionHash}${item.logIndex}`}>
               {event.inputs.map((input, index) => {
-                const value = item.args[input.name || index];
+                const value = Array.isArray(item.args) 
+                  ? item.args[index] 
+                  : (item.args as Record<string, unknown>)[input.name || index];
                 const explorerUrl = input.type === "address" ? getAddressUrl(value as any) : undefined;
                 return (
                   <TableCell key={input.name || index} className="min-w-0 align-top">

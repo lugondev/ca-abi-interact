@@ -15,7 +15,13 @@ export const useTransactionParamsForm = (
   const { address } = walletModel.useCurrentWallet();
 
   const initialValues = useInitialTransactionParams(contract, abiItem, args);
-  const [values, setValues] = useState<TTransactionParams>(initialValues);
+  const [values, setValues] = useState<TTransactionParams>(() => ({
+    from: address || "0x0000000000000000000000000000000000000000" as TAddress,
+    nonce: 0,
+    value: "0",
+    gas: 21000,
+    ...initialValues,
+  } as TTransactionParams));
 
   const updateNonce = useCallback(
     (address: TAddress) => {
@@ -35,8 +41,8 @@ export const useTransactionParamsForm = (
           data: initialValues.data,
           value: BigInt(value || 0),
         })
-        .then((value) => setValues((prev) => ({ ...prev, gas: value.toString() })))
-        .catch(() => setValues((prev) => ({ ...prev, gas: "0" })));
+        .then((value) => setValues((prev) => ({ ...prev, gas: Number(value) })))
+        .catch(() => setValues((prev) => ({ ...prev, gas: 0 })));
     },
     [initialValues.data, initialValues.to, publicClient]
   );

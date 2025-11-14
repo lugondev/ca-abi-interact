@@ -23,14 +23,14 @@ export const WalletCard = ({ wallet }: TProps) => {
   const { chain } = chainModel.useCurrentChain();
   const { getAddressUrl } = chainModel.useChainExplorer(chain);
   const { disconnect } = useDisconnect();
-  const { notify } = useNotifications();
+  const notify = useNotifications();
 
   const handleCopyAddress = async () => {
     try {
       await navigator.clipboard.writeText(wallet);
-      notify({ message: "Address copied to clipboard", type: "success" });
+      notify("Address copied to clipboard", "success");
     } catch (error) {
-      notify({ message: "Failed to copy address", type: "error" });
+      notify("Failed to copy address", "error");
     }
   };
 

@@ -101,7 +101,7 @@ export const SignTransactionForm = ({
               id="gas"
               type="number"
               value={values.gas}
-              onChange={(e) => onValuesChange({ gas: e.target.value })}
+              onChange={(e) => onValuesChange({ gas: parseInt(e.target.value) || 0 })}
               disabled={disabled}
               required
             />
