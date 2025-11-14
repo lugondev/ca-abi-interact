@@ -16,6 +16,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+        <meta name="description" content="Just Smart Contracts - Interact with smart contracts across multiple blockchain networks" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
         <ErrorBoundary fallback={<ErrorPage />}>
