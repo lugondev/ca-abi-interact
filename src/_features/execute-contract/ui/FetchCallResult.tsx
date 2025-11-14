@@ -11,6 +11,7 @@ type TProps = {
 };
 export const FetchCallResult = ({ contract, abiItem, args }: TProps) => {
   const { data, error, loading } = useContractCall(contract, abiItem, args);
+  const { getAddressUrl } = chainModel.useChainExplorer(contract.chain);
 
   if (loading) {
     return <Spinner />;
@@ -38,7 +39,6 @@ export const FetchCallResult = ({ contract, abiItem, args }: TProps) => {
   // Single output - use ParamValue
   const outputParam = abiItem.outputs[0];
   const outputType = outputParam.type;
-  const { getAddressUrl } = chainModel.useChainExplorer(contract.chain);
   const explorerUrl = outputType === "address" ? getAddressUrl(data as any) : undefined;
 
   return (

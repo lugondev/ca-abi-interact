@@ -455,5 +455,23 @@
         "standard": "EIP3091"
       }
     ]
+  },
+  {
+    "name": "MegaETH Mainnet",
+    "chain": "ETH",
+    "rpc": [
+      "https://rpc.megaeth.org"
+    ],
+    "faucets": [],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "infoURL": "https://megaeth.org",
+    "shortName": "megaeth",
+    "chainId": 4326,
+    "networkId": 4326,
+    "explorers": []
   }
 ]
