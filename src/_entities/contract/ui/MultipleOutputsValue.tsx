@@ -16,7 +16,7 @@ export const MultipleOutputsValue = ({
   chain, 
   shorten = true 
 }: TProps) => {
-  const { getAddressUrl } = chainModel.useChainExplorer(chain);
+  const { getAddressUrl } = chainModel.useChainExplorer(chain || 1);
   
   // If value is not an array, fallback to single value display
   if (!Array.isArray(value)) {
