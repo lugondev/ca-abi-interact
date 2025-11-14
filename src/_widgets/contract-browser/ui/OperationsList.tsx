@@ -1,5 +1,5 @@
 import { TContract, contractModel } from "@entities/contract";
-import { CreateTransaction } from "@features/sign-transaction";
+import { TransactionOptions } from "@features/sign-transaction";
 import {
   Accordion,
   AccordionContent,
@@ -24,7 +24,7 @@ export const OperationsList = ({ contract }: TProps) => {
         <AccordionItem key={index} value={`item-${index}`}>
           <AccordionTrigger>{item.name}</AccordionTrigger>
           <AccordionContent>
-            <CreateTransaction contract={contract} abiItem={item} />
+            <TransactionOptions contract={contract} abiItem={item} />
           </AccordionContent>
         </AccordionItem>
       ))}

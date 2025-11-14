@@ -33,37 +33,47 @@ export const useTransactionParamsForm = (
   );
 
   const updateGasLimit = useCallback(
-    (address: TAddress, value?: TNativeValue) => {
+    (address: TAddress, value: TNativeValue | undefined, txValues: TTransactionParams) => {
+      if (!txValues.to || !txValues.data) return;
+      
       publicClient
         ?.estimateGas({
           account: address,
-          to: initialValues.to,
-          data: initialValues.data,
+          to: txValues.to,
+          data: txValues.data,
           value: BigInt(value || 0),
         })
-        .then((value) => setValues((prev) => ({ ...prev, gas: Number(value) })))
+        .then((gasValue) => setValues((prev) => ({ ...prev, gas: Number(gasValue) })))
         .catch(() => setValues((prev) => ({ ...prev, gas: 0 })));
     },
-    [initialValues.data, initialValues.to, publicClient]
+    [publicClient]
   );
 
   const onValuesChange = useCallback(
     (changed: Partial<TTransactionParams>) => {
-      setValues((prev) => ({ ...prev, ...changed }));
+      setValues((prev) => {
+        const newValues = { ...prev, ...changed };
+        
+        // Trigger async updates after state is updated
+        // Use queueMicrotask to ensure state is updated first
+        queueMicrotask(() => {
+          if (changed.from && isEvmAddress(changed.from)) {
+            updateNonce(changed.from);
+            updateGasLimit(changed.from, undefined, newValues);
+          }
 
-      if (changed.from && isEvmAddress(changed.from)) {
-        updateNonce(changed.from);
-        updateGasLimit(changed.from);
-      }
-
-      if (changed.value) {
-        const fromAddress = changed.from || values.from;
-        if (fromAddress && isEvmAddress(fromAddress)) {
-          updateGasLimit(fromAddress, changed.value);
-        }
-      }
+          if (changed.value) {
+            const fromAddress = changed.from || prev.from;
+            if (fromAddress && isEvmAddress(fromAddress)) {
+              updateGasLimit(fromAddress, changed.value, newValues);
+            }
+          }
+        });
+        
+        return newValues;
+      });
     },
-    [updateGasLimit, updateNonce, values.from]
+    [updateGasLimit, updateNonce]
   );
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import { Row, Col2, Col3, Col1 } from "@shared/ui/Grid";
 import { TAbiFunction, TContract } from "@entities/contract";
 import { AmountInput, Mode } from "@shared/ui/AmountInput";
 import { useTransactionParamsForm } from "../model";
-import { DownloadTransaction } from "./DownloadTransaction";
+import { ViewTransaction } from "./ViewTransaction";
 
 type TProps = {
   contract: TContract;
@@ -16,6 +16,7 @@ type TProps = {
   args: string[];
   disabled?: boolean;
   onSubmit: (_values: TTransactionParams) => void;
+  signOnly?: boolean;
 };
 
 export const SignTransactionForm = ({
@@ -24,6 +25,7 @@ export const SignTransactionForm = ({
   args,
   disabled,
   onSubmit,
+  signOnly = false,
 }: TProps) => {
   const { values, payable, onValuesChange } = useTransactionParamsForm(
     contract,
@@ -152,10 +154,10 @@ export const SignTransactionForm = ({
 
       <div className="flex items-center gap-4">
         <Button type="submit" disabled={disabled}>
-          Sign
+          {signOnly ? "Sign Only" : "Sign & Broadcast"}
         </Button>
 
-        <DownloadTransaction fetchTxFields={() => values} />
+        <ViewTransaction fetchTxFields={() => values} />
       </div>
     </form>
   );
