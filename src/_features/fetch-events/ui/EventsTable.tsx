@@ -52,6 +52,7 @@ export const EventsTable = ({ chain, event, items, loading }: TProps) => {
                       value={value} 
                       chain={chain}
                       explorerUrl={explorerUrl}
+                      abiParam={input}
                     />
                   </TableCell>
                 );

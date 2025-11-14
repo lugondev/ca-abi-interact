@@ -2,7 +2,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { TContract, TAbiFunction } from "@entities/contract";
-import { ParamValue } from "@entities/contract";
+import { ParamValue, MultipleOutputsValue } from "@entities/contract";
 import { chainModel } from "@entities/chain";
 import { useContractCall } from "../model";
 import { RefreshCw } from "lucide-react";
@@ -27,7 +27,10 @@ export const PropertyCall = ({ contract, abiItem }: TProps) => {
     onRefresh: refetch,
   });
 
-  const outputType = abiItem.outputs?.[0]?.type;
+  // Prepare output params for rendering
+  const hasMultipleOutputs = abiItem.outputs && abiItem.outputs.length > 1;
+  const outputParam = abiItem.outputs?.[0];
+  const outputType = outputParam?.type;
   const explorerUrl = outputType === "address" ? getAddressUrl(data as any) : undefined;
 
   return (
@@ -51,13 +54,23 @@ export const PropertyCall = ({ contract, abiItem }: TProps) => {
           <Alert variant="destructive">
             <AlertDescription>{error.message}</AlertDescription>
           </Alert>
+        ) : hasMultipleOutputs ? (
+          // Handle multiple outputs
+          <MultipleOutputsValue
+            outputs={abiItem.outputs}
+            value={data}
+            chain={contract.chain}
+            shorten={false}
+          />
         ) : (
+          // Single output
           <ParamValue 
             value={data} 
             abiType={outputType} 
             chain={contract.chain} 
             shorten={false}
             explorerUrl={explorerUrl}
+            abiParam={outputParam}
           />
         )}
       </div>

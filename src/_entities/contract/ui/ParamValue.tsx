@@ -1,9 +1,10 @@
 import { BooleanValue } from "@shared/ui/BooleanValue";
-import { TAbiParamType } from "../model/types";
+import { TAbiParamType, TAbiParam } from "../model/types";
 import { AddressValue } from "@shared/ui/AddressValue";
 import { ValueDisplay } from "@shared/ui/ValueDisplay";
 import { JsonDisplay } from "@shared/ui/JsonDisplay";
 import { TAddress, TChainId } from "@shared/lib/web3";
+import { TupleValue } from "./TupleValue";
 
 type TProps = {
   abiType: TAbiParamType;
@@ -11,6 +12,7 @@ type TProps = {
   chain?: TChainId;
   shorten?: boolean;
   explorerUrl?: string;
+  abiParam?: TAbiParam; // Optional full parameter structure for tuple support
 };
 
 // Custom JSON replacer to handle BigInt
@@ -21,7 +23,7 @@ const bigIntReplacer = (key: string, value: any): any => {
   return value;
 };
 
-export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl }: TProps) => {
+export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl, abiParam }: TProps) => {
   if (abiType === "bool") {
     return <BooleanValue value={String(value)} />;
   }
@@ -31,13 +33,46 @@ export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl 
     return <AddressValue value={addressValue} explorerUrl={explorerUrl} shorten={shorten} />;
   }
 
-  // Handle tuple/struct (object or array)
-  if (typeof value === "object" && value !== null) {
+  // Check if this is a tuple type (including tuple[])
+  const isTuple = abiType === "tuple" || abiType.startsWith("tuple");
+  
+  // Handle tuple/struct with named fields if abiParam is provided
+  // This must be checked BEFORE checking if value is object/array to avoid fallback to JSON
+  if (isTuple && abiParam) {
+    const hasComponents = "components" in abiParam && abiParam.components && abiParam.components.length > 0;
+    
+    if (hasComponents) {
+      // Check if value is actually a tuple (object or array)
+      // Viem can return tuples as either objects (with named keys) or arrays (by index)
+      // Arrays are also objects in JS, so we need to check both cases
+      if (typeof value === "object" && value !== null) {
+        // If it's a tuple with components, always use TupleValue to display with field names
+        return (
+          <TupleValue
+            abiParam={abiParam}
+            value={value}
+            chain={chain}
+            shorten={shorten}
+            explorerUrl={explorerUrl}
+          />
+        );
+      }
+    }
+  }
+
+  // Handle tuple/struct (object or array) without named fields - fallback to JSON
+  if (isTuple && (typeof value === "object" && value !== null || Array.isArray(value))) {
     const jsonString = JSON.stringify(value, bigIntReplacer, 2);
     return <JsonDisplay value={jsonString} />;
   }
 
-  // Handle arrays
+  // Handle non-tuple objects
+  if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+    const jsonString = JSON.stringify(value, bigIntReplacer, 2);
+    return <JsonDisplay value={jsonString} />;
+  }
+
+  // Handle non-tuple arrays
   if (Array.isArray(value)) {
     const jsonString = JSON.stringify(value, bigIntReplacer, 2);
     return <JsonDisplay value={jsonString} />;

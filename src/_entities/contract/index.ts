@@ -17,3 +17,4 @@ export { ContractForm } from "./ui/ContractForm";
 export { ParamValue } from "./ui/ParamValue";
 export { ParamInput } from "./ui/ParamInput";
 export { FunctionInputs } from "./ui/FunctionInputs";
+export { MultipleOutputsValue } from "./ui/MultipleOutputsValue";

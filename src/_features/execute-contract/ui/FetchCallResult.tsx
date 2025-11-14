@@ -1,4 +1,4 @@
-import { ParamValue, TAbiFunction, TContract } from "@entities/contract";
+import { TAbiFunction, TContract, ParamValue, MultipleOutputsValue } from "@entities/contract";
 import { chainModel } from "@entities/chain";
 import { useContractCall } from "../model";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -11,7 +11,6 @@ type TProps = {
 };
 export const FetchCallResult = ({ contract, abiItem, args }: TProps) => {
   const { data, error, loading } = useContractCall(contract, abiItem, args);
-  const { getAddressUrl } = chainModel.useChainExplorer(contract.chain);
 
   if (loading) {
     return <Spinner />;
@@ -25,7 +24,21 @@ export const FetchCallResult = ({ contract, abiItem, args }: TProps) => {
     );
   }
 
-  const outputType = abiItem.outputs[0].type;
+  // Handle multiple outputs
+  if (abiItem.outputs.length > 1) {
+    return (
+      <MultipleOutputsValue
+        outputs={abiItem.outputs}
+        value={data}
+        chain={contract.chain}
+      />
+    );
+  }
+
+  // Single output - use ParamValue
+  const outputParam = abiItem.outputs[0];
+  const outputType = outputParam.type;
+  const { getAddressUrl } = chainModel.useChainExplorer(contract.chain);
   const explorerUrl = outputType === "address" ? getAddressUrl(data as any) : undefined;
 
   return (
@@ -34,6 +47,7 @@ export const FetchCallResult = ({ contract, abiItem, args }: TProps) => {
       abiType={outputType} 
       chain={contract.chain}
       explorerUrl={explorerUrl}
+      abiParam={outputParam}
     />
   );
 };
