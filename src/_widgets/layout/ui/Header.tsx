@@ -6,6 +6,7 @@ import { Navigation } from "./Navigation";
 import { SetCurrentChain } from "@features/set-current-chain";
 import { WalletCard, walletModel } from "@entities/wallet";
 import { ConnectButton } from "@features/connect-wallet";
+import { SettingsDialog } from "@features/settings";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -64,6 +65,10 @@ const MobileNav = () => {
               <span className="text-sm font-medium">Network</span>
               <SetCurrentChain />
             </div>
+            <div className="flex flex-col gap-2">
+              <span className="text-sm font-medium">Settings</span>
+              <SettingsDialog />
+            </div>
           </div>
         </div>
       </SheetContent>
@@ -91,6 +96,7 @@ export const Header = () => {
             <div className="min-w-[200px]">
               <SetCurrentChain />
             </div>
+            <SettingsDialog />
           </div>
         </div>
       </div>
