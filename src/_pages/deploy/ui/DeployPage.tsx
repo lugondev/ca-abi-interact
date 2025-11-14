@@ -16,7 +16,7 @@ export const DeployPage = () => {
 
   return (
     <FlexVertical>
-      <h1>Deploy new contract</h1>
+      <h1 className="text-2xl sm:text-3xl font-bold">Deploy new contract</h1>
       <DeployForm onChange={load} />
 
       {ctor && (
