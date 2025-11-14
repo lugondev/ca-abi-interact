@@ -21,11 +21,11 @@ export const PropertiesList = ({ contract }: TProps) => {
   }
 
   return (
-    <div className="w-full overflow-hidden space-y-4">
+    <div className="w-full space-y-4">
       <div className="flex justify-end">
         <GlobalRefreshButton />
       </div>
-      <div className="border rounded-lg">
+      <div className="border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
