@@ -1,4 +1,4 @@
-import cx from "classnames";
+import { cn } from "@/lib/utils";
 import { TWithChildren, TWithClassname } from "@shared/lib/props";
 
 type TProps = TWithChildren &
@@ -9,7 +9,7 @@ type TProps = TWithChildren &
 export const ExternalLink = ({ children, className, href }: TProps) => {
   return (
     <a
-      className={cx("text-blue-500 hover:underline", className)}
+      className={cn("text-blue-500 hover:underline", className)}
       href={href}
       target="_blank"
       rel="noopener noreferrer"

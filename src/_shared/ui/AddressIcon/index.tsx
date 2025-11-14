@@ -1,6 +1,6 @@
 import { isAddress } from "viem";
 import Blockies from "react-blockies";
-import cn from "classnames";
+import { cn } from "@/lib/utils";
 import { TAddress } from "@shared/lib/web3";
 import { TSize, TWithClassname, TWithSize } from "@shared/lib/props";
 import { MinusSquare } from "lucide-react";
