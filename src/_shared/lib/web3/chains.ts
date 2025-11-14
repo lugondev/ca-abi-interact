@@ -1,0 +1,2 @@
+export type TChainId = number;
+
