@@ -1,11 +1,80 @@
-"use client";
+import type { Metadata } from "next";
+import { ClientLayout } from "./ClientLayout";
 
-import "./globals.css";
-import { ErrorBoundary } from "react-error-boundary";
-import { ErrorPage } from "@pages/error";
-import { Layout } from "@widgets/layout";
-import { NotificationsProvider } from "@shared/lib/notify";
-import { Web3LoadingGuard } from "@app/Web3LoadingGuard";
+export const metadata: Metadata = {
+  title: {
+    default: "Just Smart Contracts",
+    template: "%s | Just Smart Contracts",
+  },
+  description:
+    "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
+  keywords: [
+    "smart contracts",
+    "blockchain",
+    "ethereum",
+    "web3",
+    "dapp",
+    "contract interaction",
+    "deploy contracts",
+    "blockchain tools",
+  ],
+  authors: [{ name: "Just Smart Contracts" }],
+  creator: "Just Smart Contracts",
+  publisher: "Just Smart Contracts",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://justsmartcontracts.com"
+  ),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Just Smart Contracts",
+    title: "Just Smart Contracts - Interact with Smart Contracts",
+    description:
+      "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Just Smart Contracts",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Just Smart Contracts - Interact with Smart Contracts",
+    description:
+      "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
+    images: ["/opengraph-image"],
+    creator: "@justsmartcontracts",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+    userScalable: true,
+  },
+};
 
 export default function RootLayout({
   children,
@@ -14,19 +83,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-        <meta name="description" content="Just Smart Contracts - Interact with smart contracts across multiple blockchain networks" />
-        <link rel="icon" href="/favicon.ico" />
-      </head>
       <body>
-        <ErrorBoundary fallback={<ErrorPage />}>
-          <Web3LoadingGuard>
-            <NotificationsProvider>
-              <Layout>{children}</Layout>
-            </NotificationsProvider>
-          </Web3LoadingGuard>
-        </ErrorBoundary>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
