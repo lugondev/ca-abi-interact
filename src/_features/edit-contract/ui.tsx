@@ -47,8 +47,14 @@ export const EditContractButton = ({ contract: initialContract }: TProps) => {
   return (
     <Dialog open={formVisible} onOpenChange={setFormVisible}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="ghost" onClick={showModal}>
-          <Pencil className="h-4 w-4" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={showModal}
+          className="h-6 w-6 p-0"
+          title="Edit contract"
+        >
+          <Pencil className="h-3 w-3" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">

@@ -10,11 +10,7 @@ export const Routes: TRouteInfo[] = [
   },
   {
     title: "ABI Builder",
-    path: "/deploy",
+    path: "/abi-builder",
   },
-  // {
-  //   title: 'Sign',
-  //   path: '/sign',
-  // },
 ];
 

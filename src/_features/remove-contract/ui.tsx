@@ -33,20 +33,30 @@ export const RemoveContractButton = ({ contract }: TProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost" onClick={(e) => e.stopPropagation()}>
-          <Trash2 className="h-4 w-4 text-destructive" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={(e) => e.stopPropagation()}
+          className="h-6 w-6 p-0"
+          title="Delete contract"
+        >
+          <Trash2 className="h-3 w-3 text-destructive" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Remove contract</AlertDialogTitle>
           <AlertDialogDescription>
-            Really delete contract - {contract.name}? This action cannot be undone.
+            Really delete contract - {contract.name}? This action cannot be
+            undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>No</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
             Yes
           </AlertDialogAction>
         </AlertDialogFooter>

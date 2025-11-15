@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     title: "Contract ABI Interact - Interact with Smart Contracts",
     description:
       "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
-    images: ["/opengraph-image"],
+    images: ["/twitter-image"],
     creator: "@contractabiinteract",
   },
   robots: {
@@ -64,8 +64,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
     apple: "/favicon.ico",
   },
   viewport: {
@@ -89,4 +89,3 @@ export default function RootLayout({
     </html>
   );
 }
-

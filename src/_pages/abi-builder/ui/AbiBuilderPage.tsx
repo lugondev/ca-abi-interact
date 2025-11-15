@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { TAbiItem } from "@entities/contract";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -39,7 +45,9 @@ export const AbiBuilderPage = () => {
     importAbi,
   } = useAbiBuilder();
 
-  const [activeTab, setActiveTab] = useState<"function" | "event" | "constructor">("function");
+  const [activeTab, setActiveTab] = useState<
+    "function" | "event" | "constructor"
+  >("function");
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [importText, setImportText] = useState("");
   const [showImport, setShowImport] = useState(false);
@@ -51,7 +59,10 @@ export const AbiBuilderPage = () => {
     } else {
       addAbiItem(item);
     }
-    setActiveTab("function");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingIndex(null);
   };
 
   const handleImport = () => {
@@ -88,7 +99,8 @@ export const AbiBuilderPage = () => {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">ABI Builder</h1>
           <p className="text-muted-foreground mt-1">
-            Build your contract ABI manually by adding functions, events, and constructors
+            Build your contract ABI manually by adding functions, events, and
+            constructors
           </p>
         </div>
         <div className="flex gap-2">
@@ -96,14 +108,26 @@ export const AbiBuilderPage = () => {
             <Upload className="w-4 h-4 mr-2" />
             Import
           </Button>
-          <Button variant="outline" onClick={handleCopy} disabled={abiItems.length === 0}>
+          <Button
+            variant="outline"
+            onClick={handleCopy}
+            disabled={abiItems.length === 0}
+          >
             Copy
           </Button>
-          <Button variant="outline" onClick={handleExport} disabled={abiItems.length === 0}>
+          <Button
+            variant="outline"
+            onClick={handleExport}
+            disabled={abiItems.length === 0}
+          >
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
-          <Button variant="destructive" onClick={clearAll} disabled={abiItems.length === 0}>
+          <Button
+            variant="destructive"
+            onClick={clearAll}
+            disabled={abiItems.length === 0}
+          >
             Clear All
           </Button>
         </div>
@@ -127,10 +151,13 @@ export const AbiBuilderPage = () => {
                 <Button onClick={handleImport} disabled={!importText.trim()}>
                   Import
                 </Button>
-                <Button variant="outline" onClick={() => {
-                  setShowImport(false);
-                  setImportText("");
-                }}>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setShowImport(false);
+                    setImportText("");
+                  }}
+                >
                   Cancel
                 </Button>
               </div>
@@ -141,7 +168,10 @@ export const AbiBuilderPage = () => {
 
       <Row>
         <Col2>
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
+          <Tabs
+            value={activeTab}
+            onValueChange={(v) => setActiveTab(v as typeof activeTab)}
+          >
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="function">Add Function</TabsTrigger>
               <TabsTrigger value="event">Add Event</TabsTrigger>
@@ -149,26 +179,50 @@ export const AbiBuilderPage = () => {
             </TabsList>
             <TabsContent value="function" className="mt-4">
               <AbiItemForm
+                key={`function-${
+                  editingIndex !== null ? `edit-${editingIndex}` : "new"
+                }`}
                 type="function"
                 onSubmit={handleAddItem}
-                onCancel={editingIndex !== null ? () => setEditingIndex(null) : undefined}
-                initialItem={editingIndex !== null ? abiItems[editingIndex] : undefined}
+                onCancel={editingIndex !== null ? handleCancelEdit : undefined}
+                initialItem={
+                  editingIndex !== null &&
+                  abiItems[editingIndex]?.type === "function"
+                    ? abiItems[editingIndex]
+                    : undefined
+                }
               />
             </TabsContent>
             <TabsContent value="event" className="mt-4">
               <AbiItemForm
+                key={`event-${
+                  editingIndex !== null ? `edit-${editingIndex}` : "new"
+                }`}
                 type="event"
                 onSubmit={handleAddItem}
-                onCancel={editingIndex !== null ? () => setEditingIndex(null) : undefined}
-                initialItem={editingIndex !== null ? abiItems[editingIndex] : undefined}
+                onCancel={editingIndex !== null ? handleCancelEdit : undefined}
+                initialItem={
+                  editingIndex !== null &&
+                  abiItems[editingIndex]?.type === "event"
+                    ? abiItems[editingIndex]
+                    : undefined
+                }
               />
             </TabsContent>
             <TabsContent value="constructor" className="mt-4">
               <AbiItemForm
+                key={`constructor-${
+                  editingIndex !== null ? `edit-${editingIndex}` : "new"
+                }`}
                 type="constructor"
                 onSubmit={handleAddItem}
-                onCancel={editingIndex !== null ? () => setEditingIndex(null) : undefined}
-                initialItem={editingIndex !== null ? abiItems[editingIndex] : undefined}
+                onCancel={editingIndex !== null ? handleCancelEdit : undefined}
+                initialItem={
+                  editingIndex !== null &&
+                  abiItems[editingIndex]?.type === "constructor"
+                    ? abiItems[editingIndex]
+                    : undefined
+                }
               />
             </TabsContent>
           </Tabs>
@@ -177,66 +231,80 @@ export const AbiBuilderPage = () => {
           <Card>
             <CardHeader>
               <CardTitle>ABI Items ({abiItems.length})</CardTitle>
-              <CardDescription>Preview and manage your ABI items</CardDescription>
+              <CardDescription>
+                Preview and manage your ABI items
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="max-h-[600px] overflow-y-auto">
-              <FlexVertical size="small">
-                {abiItems.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    No ABI items yet. Add functions, events, or constructors to get started.
-                  </p>
-                ) : (
-                  abiItems.map((item, index) => (
-                    <Card key={index} className="relative">
-                      <CardContent className="pt-4">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Badge variant="outline">{getAbiItemTypeLabel(item)}</Badge>
-                              <span className="font-medium truncate">
-                                {getAbiItemDisplayName(item)}
-                              </span>
-                            </div>
-                            <p className="text-xs text-muted-foreground font-mono break-all">
-                              {getAbiItemSignature(item)}
-                            </p>
-                            {(item.type === "function" || item.type === "event" || item.type === "constructor") && (
-                              <div className="mt-2 text-xs text-muted-foreground">
-                                {item.inputs.length} input{item.inputs.length !== 1 ? "s" : ""}
-                                {item.type === "function" && item.outputs && (
-                                  <> • {item.outputs.length} output{item.outputs.length !== 1 ? "s" : ""}</>
-                                )}
+                <FlexVertical size="small">
+                  {abiItems.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">
+                      No ABI items yet. Add functions, events, or constructors
+                      to get started.
+                    </p>
+                  ) : (
+                    abiItems.map((item, index) => (
+                      <Card key={index} className="relative">
+                        <CardContent className="pt-4">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Badge variant="outline">
+                                  {getAbiItemTypeLabel(item)}
+                                </Badge>
+                                <span className="font-medium truncate">
+                                  {getAbiItemDisplayName(item)}
+                                </span>
                               </div>
-                            )}
+                              <p className="text-xs text-muted-foreground font-mono break-all">
+                                {getAbiItemSignature(item)}
+                              </p>
+                              {(item.type === "function" ||
+                                item.type === "event" ||
+                                item.type === "constructor") && (
+                                <div className="mt-2 text-xs text-muted-foreground">
+                                  {item.inputs.length} input
+                                  {item.inputs.length !== 1 ? "s" : ""}
+                                  {item.type === "function" && item.outputs && (
+                                    <>
+                                      {" "}
+                                      • {item.outputs.length} output
+                                      {item.outputs.length !== 1 ? "s" : ""}
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => {
+                                  setEditingIndex(index);
+                                  if (item.type === "function")
+                                    setActiveTab("function");
+                                  else if (item.type === "event")
+                                    setActiveTab("event");
+                                  else setActiveTab("constructor");
+                                }}
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeAbiItem(index)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
-                          <div className="flex gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                setEditingIndex(index);
-                                if (item.type === "function") setActiveTab("function");
-                                else if (item.type === "event") setActiveTab("event");
-                                else setActiveTab("constructor");
-                              }}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeAbiItem(index)}
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))
-                )}
-              </FlexVertical>
+                        </CardContent>
+                      </Card>
+                    ))
+                  )}
+                </FlexVertical>
               </div>
             </CardContent>
           </Card>
@@ -264,4 +332,3 @@ export const AbiBuilderPage = () => {
     </FlexVertical>
   );
 };
-

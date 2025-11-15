@@ -22,7 +22,9 @@ type TProps = {
   contract: TContract;
 };
 
-export const DuplicateContractButton = ({ contract: initialContract }: TProps) => {
+export const DuplicateContractButton = ({
+  contract: initialContract,
+}: TProps) => {
   // Get the latest contract from store to ensure we have updated data
   const { contracts } = contractModel.useContracts();
   const contract = useMemo(
@@ -78,17 +80,17 @@ export const DuplicateContractButton = ({ contract: initialContract }: TProps) =
       if (isSubmitting) {
         return;
       }
-      
+
       setIsSubmitting(true);
-      
+
       // Determine which ABI to use:
       // - If localAbi was modified in ABI tab (differs from initial), use localAbi
       // - Otherwise, use the ABI from the form (which may have been edited in General tab)
-      const abiWasEditedInAbiTab = 
+      const abiWasEditedInAbiTab =
         JSON.stringify(localAbi) !== JSON.stringify(initialAbi);
-      
+
       const finalAbi = abiWasEditedInAbiTab ? localAbi : values.abi;
-      
+
       // Create the duplicate contract (only once)
       duplicateContract({
         chain: values.chain,
@@ -96,7 +98,7 @@ export const DuplicateContractButton = ({ contract: initialContract }: TProps) =
         name: values.name,
         abi: finalAbi,
       });
-      
+
       // Close modal after creating contract
       setFormVisible(false);
       setIsSubmitting(false);
@@ -105,16 +107,25 @@ export const DuplicateContractButton = ({ contract: initialContract }: TProps) =
   );
 
   return (
-    <Dialog open={formVisible} onOpenChange={(open) => {
-      if (open) {
-        showModal();
-      } else {
-        hideModal();
-      }
-    }}>
+    <Dialog
+      open={formVisible}
+      onOpenChange={(open) => {
+        if (open) {
+          showModal();
+        } else {
+          hideModal();
+        }
+      }}
+    >
       <DialogTrigger asChild>
-        <Button size="sm" variant="ghost" onClick={showModal}>
-          <Files className="h-4 w-4" />
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={showModal}
+          className="h-6 w-6 p-0"
+          title="Duplicate contract"
+        >
+          <Files className="h-3 w-3" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -144,4 +155,3 @@ export const DuplicateContractButton = ({ contract: initialContract }: TProps) =
     </Dialog>
   );
 };
-

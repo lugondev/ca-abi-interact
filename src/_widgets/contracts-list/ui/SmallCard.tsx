@@ -13,9 +13,11 @@ export const SmallCard = ({ contract, extra }: TProps) => {
   const explorerUrl = getAddressUrl(contract.address);
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-1">
       <div className="flex justify-between items-start gap-2">
-        <p className="text-sm font-medium overflow-hidden text-ellipsis flex-1">{contract.name}</p>
+        <p className="text-sm font-medium overflow-hidden text-ellipsis flex-1 leading-tight">
+          {contract.name}
+        </p>
         {extra && <div className="flex-shrink-0">{extra}</div>}
       </div>
       <AddressValue value={contract.address} explorerUrl={explorerUrl} />

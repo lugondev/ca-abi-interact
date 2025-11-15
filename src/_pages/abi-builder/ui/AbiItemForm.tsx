@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TAbiItem, TAbiParam } from "@entities/contract";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,57 +23,95 @@ type TProps = {
   initialItem?: TAbiItem;
 };
 
+// Helper functions to initialize state from initialItem
+const getInitialName = (initialItem?: TAbiItem): string => {
+  if (!initialItem) return "";
+  if (initialItem.type === "function" || initialItem.type === "event") {
+    return initialItem.name || "";
+  }
+  return "";
+};
+
+const getInitialStateMutability = (
+  initialItem?: TAbiItem
+): "pure" | "view" | "nonpayable" | "payable" => {
+  if (!initialItem) return "nonpayable";
+  if (initialItem.type === "function" || initialItem.type === "constructor") {
+    return initialItem.stateMutability || "nonpayable";
+  }
+  return "nonpayable";
+};
+
+const getInitialInputs = (
+  initialItem?: TAbiItem,
+  type?: string
+): TAbiParam[] => {
+  if (!initialItem) return [];
+  if (
+    initialItem.type === "function" ||
+    initialItem.type === "event" ||
+    initialItem.type === "constructor"
+  ) {
+    return (
+      initialItem.inputs?.map((input) => {
+        const result = { ...(input as any) } as TAbiParam & {
+          indexed?: boolean;
+        };
+        if (type === "event" && initialItem.type === "event") {
+          result.indexed =
+            ("indexed" in input ? (input as any).indexed : false) || false;
+        }
+        return result;
+      }) || []
+    );
+  }
+  return [];
+};
+
+const getInitialOutputs = (initialItem?: TAbiItem): TAbiParam[] => {
+  if (!initialItem) return [];
+  if (initialItem.type === "function" && initialItem.outputs) {
+    return [...initialItem.outputs];
+  }
+  return [];
+};
+
+const getInitialAnonymous = (initialItem?: TAbiItem): boolean => {
+  if (!initialItem) return false;
+  if (initialItem.type === "event") {
+    return initialItem.anonymous || false;
+  }
+  return false;
+};
+
 export const AbiItemForm = ({
   type,
   onSubmit,
   onCancel,
   initialItem,
 }: TProps) => {
-  const [name, setName] = useState(
-    initialItem?.type === "function" || initialItem?.type === "event"
-      ? initialItem.name || ""
-      : ""
-  );
+  const [name, setName] = useState(() => getInitialName(initialItem));
   const [stateMutability, setStateMutability] = useState<
     "pure" | "view" | "nonpayable" | "payable"
-  >(
-    (initialItem?.type === "function" && initialItem.stateMutability) ||
-      (initialItem?.type === "constructor" && initialItem.stateMutability) ||
-      "nonpayable"
+  >(() => getInitialStateMutability(initialItem));
+  const [inputs, setInputs] = useState<TAbiParam[]>(() =>
+    getInitialInputs(initialItem, type)
   );
-  const [inputs, setInputs] = useState<TAbiParam[]>(() => {
-    if (!initialItem) return [];
-    // Only function, event, and constructor have inputs
-    if (
-      initialItem.type === "function" ||
-      initialItem.type === "event" ||
-      initialItem.type === "constructor"
-    ) {
-      return (
-        initialItem.inputs?.map((input) => {
-          // Cast to allow optional `indexed` property for event params
-          const result = { ...(input as any) } as TAbiParam & {
-            indexed?: boolean;
-          };
-          // Only event parameters have indexed property
-          if (type === "event" && initialItem.type === "event") {
-            result.indexed =
-              ("indexed" in input ? (input as any).indexed : false) || false;
-          }
-          return result;
-        }) || []
-      );
-    }
-    return [];
-  });
-  const [outputs, setOutputs] = useState<TAbiParam[]>(
-    initialItem?.type === "function" && initialItem.outputs
-      ? [...initialItem.outputs]
-      : []
+  const [outputs, setOutputs] = useState<TAbiParam[]>(() =>
+    getInitialOutputs(initialItem)
   );
-  const [anonymous, setAnonymous] = useState(
-    (initialItem?.type === "event" && initialItem.anonymous) || false
+  const [anonymous, setAnonymous] = useState(() =>
+    getInitialAnonymous(initialItem)
   );
+
+  // Reset form when initialItem changes
+  useEffect(() => {
+    setName(getInitialName(initialItem));
+    setStateMutability(getInitialStateMutability(initialItem));
+    setInputs(getInitialInputs(initialItem, type));
+    setOutputs(getInitialOutputs(initialItem));
+    setAnonymous(getInitialAnonymous(initialItem));
+  }, [initialItem, type]);
 
   const addInput = () => {
     const newInput: TAbiParam = { name: "", type: "uint256" } as TAbiParam;
@@ -133,6 +171,7 @@ export const AbiItemForm = ({
         stateMutability,
       };
       onSubmit(item);
+      resetForm();
     } else if (type === "event") {
       if (!name.trim()) {
         alert("Event name is required");
@@ -151,6 +190,7 @@ export const AbiItemForm = ({
         anonymous,
       };
       onSubmit(item);
+      resetForm();
     } else if (type === "constructor") {
       const item: TAbiItem = {
         type: "constructor",
@@ -161,7 +201,21 @@ export const AbiItemForm = ({
           : "nonpayable") as any,
       };
       onSubmit(item);
+      resetForm();
     }
+  };
+
+  const resetForm = () => {
+    setName("");
+    setStateMutability("nonpayable");
+    setInputs([]);
+    setOutputs([]);
+    setAnonymous(false);
+  };
+
+  const handleCancel = () => {
+    resetForm();
+    onCancel?.();
   };
 
   return (
@@ -350,7 +404,7 @@ export const AbiItemForm = ({
               {initialItem ? "Update" : "Add"}
             </Button>
             {onCancel && (
-              <Button variant="outline" onClick={onCancel}>
+              <Button variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
             )}
