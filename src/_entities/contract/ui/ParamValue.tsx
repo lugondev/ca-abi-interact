@@ -6,6 +6,7 @@ import { JsonDisplay } from "@shared/ui/JsonDisplay";
 import { Uint256ValueDisplay } from "@shared/ui/Uint256ValueDisplay";
 import { TAddress, TChainId } from "@shared/lib/web3";
 import { TupleValue } from "./TupleValue";
+import { isArrayType, isTupleType, getArrayItemType } from "../lib";
 
 type TProps = {
   abiType: TAbiParamType;
@@ -34,10 +35,47 @@ export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl,
     return <AddressValue value={addressValue} explorerUrl={explorerUrl} shorten={shorten} />;
   }
 
-  // Check if this is a tuple type (including tuple[])
-  const isTuple = abiType === "tuple" || abiType.startsWith("tuple");
+  // Check if this is an array type (including tuple[])
+  const isArray = isArrayType(abiType);
   
-  // Handle tuple/struct with named fields if abiParam is provided
+  // Handle array of tuples (tuple[]) - display each tuple item separately
+  if (isArray && Array.isArray(value) && abiParam) {
+    const itemType = getArrayItemType(abiType);
+    const isArrayOfTuples = isTupleType(itemType);
+    
+    if (isArrayOfTuples && "components" in abiParam && abiParam.components) {
+      // Create a tuple param for each item in the array
+      const tupleParam: TAbiParam = {
+        type: itemType as TAbiParamType,
+        components: abiParam.components,
+      };
+      
+      // Display each tuple item in the array
+      return (
+        <div className="space-y-3">
+          {value.map((item, index) => (
+            <div key={index} className="border-l-2 border-muted pl-3">
+              <div className="text-xs text-muted-foreground mb-1">
+                Item {index}
+              </div>
+              <TupleValue
+                abiParam={tupleParam}
+                value={item}
+                chain={chain}
+                shorten={shorten}
+                explorerUrl={explorerUrl}
+              />
+            </div>
+          ))}
+        </div>
+      );
+    }
+  }
+
+  // Check if this is a tuple type (not tuple[])
+  const isTuple = isTupleType(abiType) && !isArray;
+  
+  // Handle single tuple/struct with named fields if abiParam is provided
   // This must be checked BEFORE checking if value is object/array to avoid fallback to JSON
   if (isTuple && abiParam) {
     const hasComponents = "components" in abiParam && abiParam.components && abiParam.components.length > 0;
@@ -62,7 +100,8 @@ export const ParamValue = ({ abiType, value, chain, shorten = true, explorerUrl,
   }
 
   // Handle tuple/struct (object or array) without named fields - fallback to JSON
-  if (isTuple && (typeof value === "object" && value !== null || Array.isArray(value))) {
+  // Only for non-array tuple types
+  if (isTuple && !isArray && (typeof value === "object" && value !== null || Array.isArray(value))) {
     const jsonString = JSON.stringify(value, bigIntReplacer, 2);
     return <JsonDisplay value={jsonString} />;
   }

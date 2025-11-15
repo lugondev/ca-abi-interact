@@ -2,6 +2,7 @@ import { TAbiParam } from "../model/types";
 import { ParamValue } from "./ParamValue";
 import { TChainId } from "@shared/lib/web3";
 import { chainModel } from "@entities/chain";
+import { isArrayType } from "../lib";
 
 type TProps = {
   outputs: readonly TAbiParam[];
@@ -18,24 +19,25 @@ export const MultipleOutputsValue = ({
 }: TProps) => {
   const { getAddressUrl } = chainModel.useChainExplorer(chain || 1);
 
-  // If value is not an array, fallback to single value display
+  // If only one output, always use ParamValue (handles arrays, tuples, etc.)
+  if (outputs.length === 1) {
+    const output = outputs[0];
+    const explorerUrl =
+      output.type === "address" ? getAddressUrl(value as any) : undefined;
+    return (
+      <ParamValue
+        abiType={output.type}
+        value={value}
+        chain={chain}
+        shorten={shorten}
+        explorerUrl={explorerUrl}
+        abiParam={output}
+      />
+    );
+  }
+
+  // Multiple outputs: value should be an array matching outputs length
   if (!Array.isArray(value)) {
-    // If only one output, display it normally
-    if (outputs.length === 1) {
-      const output = outputs[0];
-      const explorerUrl =
-        output.type === "address" ? getAddressUrl(value as any) : undefined;
-      return (
-        <ParamValue
-          abiType={output.type}
-          value={value}
-          chain={chain}
-          shorten={shorten}
-          explorerUrl={explorerUrl}
-          abiParam={output}
-        />
-      );
-    }
     // Multiple outputs but value is not array - this shouldn't happen, but handle gracefully
     return (
       <ParamValue
@@ -48,6 +50,7 @@ export const MultipleOutputsValue = ({
   }
 
   // Display each output with its name
+  // Note: value array length should match outputs length for multiple return values
   return (
     <div className="space-y-2">
       {outputs.map((output, index) => {

@@ -47,7 +47,7 @@ export const FunctionInputs = ({ abiItem, onSubmit, buttonText }: TProps) => {
           <ParamInput
             value={values[index] || ""}
             onChange={(value) => handleChange(index, value)}
-            abiParam={input.type}
+            abiParam={input}
           />
         </div>
       ))}

@@ -330,20 +330,15 @@
     "title": "Ethereum Testnet Sepolia",
     "chain": "ETH",
     "rpc": [
-      "https://rpc.sepolia.org",
-      "https://rpc2.sepolia.org",
-      "https://rpc-sepolia.rockx.com",
-      "https://rpc.sepolia.ethpandaops.io",
-      "https://sepolia.infura.io/v3/${INFURA_API_KEY}",
-      "wss://sepolia.infura.io/v3/${INFURA_API_KEY}",
+      "https://ethereum-sepolia-rpc.publicnode.com",
+      "https://ethereum-sepolia.gateway.tatum.io",
+      "wss://sepolia.drpc.org",
+      "wss://0xrpc.io/sep",
       "https://sepolia.gateway.tenderly.co",
       "wss://sepolia.gateway.tenderly.co",
-      "https://ethereum-sepolia.publicnode.com",
-      "wss://ethereum-sepolia.publicnode.com"
+      "wss://ethereum-sepolia-rpc.publicnode.com"
     ],
-    "faucets": [
-      "http://fauceth.komputing.org?chain=11155111&address=${ADDRESS}"
-    ],
+    "faucets": [],
     "nativeCurrency": {
       "name": "Sepolia Ether",
       "symbol": "ETH",

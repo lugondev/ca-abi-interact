@@ -14,16 +14,12 @@ export const useInitialTransactionParams = (
   });
 
   return useMemo(() => {
-    const wrappedArraysArgs = args.map((arg, index) => {
-      return contractUtils.isArrayType(abiItem.inputs[index].type)
-        ? arg.split(",").map((item) => item.trim())
-        : arg;
-    });
+    const parsedArgs = contractUtils.parseFunctionArgs(args, abiItem.inputs);
 
     const values: Partial<TTransactionParams> = {
       data: encodeFunctionData({
         abi: contract.abi,
-        args: wrappedArraysArgs,
+        args: parsedArgs,
         functionName: abiItem.name,
       }),
       to: contract.address,
