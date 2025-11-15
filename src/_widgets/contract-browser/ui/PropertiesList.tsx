@@ -1,5 +1,12 @@
 import { AbiFunction } from "abitype";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TContract, contractModel, TAbiFunction } from "@entities/contract";
 import { PropertyCall } from "@features/execute-contract";
 import { GlobalRefreshButton } from "@shared/ui/GlobalRefreshButton";
@@ -10,13 +17,17 @@ type TProps = {
 };
 
 export const PropertiesList = ({ contract }: TProps) => {
-  const functions = contractModel.useContractProperties(contract) as TAbiFunction[];
+  const functions = contractModel.useContractProperties(
+    contract
+  ) as TAbiFunction[];
 
   if (functions.length === 0) {
     return (
       <div className="text-center text-muted-foreground py-8">
         <p>No properties found in this contract.</p>
-        <p className="text-sm mt-2">Properties are readonly functions without input parameters.</p>
+        <p className="text-sm mt-2">
+          Properties are readonly functions without input parameters.
+        </p>
       </div>
     );
   }
@@ -40,7 +51,10 @@ export const PropertiesList = ({ contract }: TProps) => {
                 <TableCell className="font-medium align-top">
                   <div className="flex items-center gap-2">
                     <span>{abiItem.name}</span>
-                    <DeleteAbiItemButton contract={contract} abiItem={abiItem} />
+                    <DeleteAbiItemButton
+                      contract={contract}
+                      abiItem={abiItem}
+                    />
                   </div>
                 </TableCell>
                 <TableCell className="min-w-0 max-w-0">

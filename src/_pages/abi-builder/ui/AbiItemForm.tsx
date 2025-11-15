@@ -5,7 +5,13 @@ import { TAbiItem, TAbiParam } from "@entities/contract";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
 import { FlexVertical } from "@shared/ui/Grid";
@@ -17,33 +23,53 @@ type TProps = {
   initialItem?: TAbiItem;
 };
 
-export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) => {
-  const [name, setName] = useState(initialItem?.type === "function" || initialItem?.type === "event" ? initialItem.name || "" : "");
+export const AbiItemForm = ({
+  type,
+  onSubmit,
+  onCancel,
+  initialItem,
+}: TProps) => {
+  const [name, setName] = useState(
+    initialItem?.type === "function" || initialItem?.type === "event"
+      ? initialItem.name || ""
+      : ""
+  );
   const [stateMutability, setStateMutability] = useState<
     "pure" | "view" | "nonpayable" | "payable"
   >(
     (initialItem?.type === "function" && initialItem.stateMutability) ||
-    (initialItem?.type === "constructor" && initialItem.stateMutability) ||
-    "nonpayable"
+      (initialItem?.type === "constructor" && initialItem.stateMutability) ||
+      "nonpayable"
   );
   const [inputs, setInputs] = useState<TAbiParam[]>(() => {
     if (!initialItem) return [];
     // Only function, event, and constructor have inputs
-    if (initialItem.type === "function" || initialItem.type === "event" || initialItem.type === "constructor") {
-      return initialItem.inputs?.map((input) => {
-        // Cast to allow optional `indexed` property for event params
-        const result = { ...(input as any) } as TAbiParam & { indexed?: boolean };
-        // Only event parameters have indexed property
-        if (type === "event" && initialItem.type === "event") {
-          result.indexed = ("indexed" in input ? (input as any).indexed : false) || false;
-        }
-        return result;
-      }) || [];
+    if (
+      initialItem.type === "function" ||
+      initialItem.type === "event" ||
+      initialItem.type === "constructor"
+    ) {
+      return (
+        initialItem.inputs?.map((input) => {
+          // Cast to allow optional `indexed` property for event params
+          const result = { ...(input as any) } as TAbiParam & {
+            indexed?: boolean;
+          };
+          // Only event parameters have indexed property
+          if (type === "event" && initialItem.type === "event") {
+            result.indexed =
+              ("indexed" in input ? (input as any).indexed : false) || false;
+          }
+          return result;
+        }) || []
+      );
     }
     return [];
   });
   const [outputs, setOutputs] = useState<TAbiParam[]>(
-    (initialItem?.type === "function" && initialItem.outputs) ? [...initialItem.outputs] : []
+    initialItem?.type === "function" && initialItem.outputs
+      ? [...initialItem.outputs]
+      : []
   );
   const [anonymous, setAnonymous] = useState(
     (initialItem?.type === "event" && initialItem.anonymous) || false
@@ -61,8 +87,16 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
     setInputs(inputs.filter((_, i) => i !== index));
   };
 
-  const updateInput = (index: number, field: keyof TAbiParam | "indexed", value: string | boolean) => {
-    setInputs(inputs.map((input, i) => (i === index ? { ...input, [field]: value } as TAbiParam : input)));
+  const updateInput = (
+    index: number,
+    field: keyof TAbiParam | "indexed",
+    value: string | boolean
+  ) => {
+    setInputs(
+      inputs.map((input, i) =>
+        i === index ? ({ ...input, [field]: value } as TAbiParam) : input
+      )
+    );
   };
 
   const addOutput = () => {
@@ -73,8 +107,16 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
     setOutputs(outputs.filter((_, i) => i !== index));
   };
 
-  const updateOutput = (index: number, field: keyof TAbiParam, value: string | boolean) => {
-    setOutputs(outputs.map((output, i) => (i === index ? { ...output, [field]: value } : output)));
+  const updateOutput = (
+    index: number,
+    field: keyof TAbiParam,
+    value: string | boolean
+  ) => {
+    setOutputs(
+      outputs.map((output, i) =>
+        i === index ? { ...output, [field]: value } : output
+      )
+    );
   };
 
   const handleSubmit = () => {
@@ -99,10 +141,13 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
       const item: TAbiItem = {
         type: "event",
         name,
-        inputs: inputs.filter((i) => i.type.trim()).map((input) => ({
-          ...(input as any),
-          indexed: ("indexed" in input ? (input as any).indexed : false) || false,
-        })),
+        inputs: inputs
+          .filter((i) => i.type.trim())
+          .map((input) => ({
+            ...(input as any),
+            indexed:
+              ("indexed" in input ? (input as any).indexed : false) || false,
+          })),
         anonymous,
       };
       onSubmit(item);
@@ -111,7 +156,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
         type: "constructor",
         inputs: inputs.filter((i) => i.type.trim()),
         // Constructors only accept 'payable' or 'nonpayable' in ABI; coerce to a valid value
-        stateMutability: (stateMutability === "payable" ? "payable" : "nonpayable") as any,
+        stateMutability: (stateMutability === "payable"
+          ? "payable"
+          : "nonpayable") as any,
       };
       onSubmit(item);
     }
@@ -120,7 +167,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="capitalize">{type === "constructor" ? "Constructor" : `Add ${type}`}</CardTitle>
+        <CardTitle className="capitalize">
+          {type === "constructor" ? "Constructor" : `Add ${type}`}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <FlexVertical size="medium">
@@ -141,9 +190,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
               <Label htmlFor="stateMutability">State Mutability</Label>
               <Select
                 value={stateMutability}
-                onValueChange={(value: "pure" | "view" | "nonpayable" | "payable") =>
-                  setStateMutability(value)
-                }
+                onValueChange={(
+                  value: "pure" | "view" | "nonpayable" | "payable"
+                ) => setStateMutability(value)}
               >
                 <SelectTrigger id="stateMutability">
                   <SelectValue />
@@ -174,7 +223,12 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
           <div>
             <div className="flex items-center justify-between mb-2">
               <Label>Inputs</Label>
-              <Button type="button" variant="outline" size="sm" onClick={addInput}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={addInput}
+              >
                 <Plus className="w-4 h-4 mr-1" />
                 Add Input
               </Button>
@@ -186,7 +240,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                     <Label>Name</Label>
                     <Input
                       value={input.name || ""}
-                      onChange={(e) => updateInput(index, "name", e.target.value)}
+                      onChange={(e) =>
+                        updateInput(index, "name", e.target.value)
+                      }
                       placeholder="paramName"
                     />
                   </div>
@@ -194,7 +250,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                     <Label>Type *</Label>
                     <Input
                       value={input.type}
-                      onChange={(e) => updateInput(index, "type", e.target.value)}
+                      onChange={(e) =>
+                        updateInput(index, "type", e.target.value)
+                      }
                       placeholder="uint256"
                       required
                     />
@@ -204,8 +262,14 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                       <input
                         type="checkbox"
                         id={`indexed-${index}`}
-                        checked={("indexed" in input ? (input as any).indexed : false) || false}
-                        onChange={(e) => updateInput(index, "indexed", e.target.checked)}
+                        checked={
+                          ("indexed" in input
+                            ? (input as any).indexed
+                            : false) || false
+                        }
+                        onChange={(e) =>
+                          updateInput(index, "indexed", e.target.checked)
+                        }
                         className="w-4 h-4"
                       />
                       <Label htmlFor={`indexed-${index}`}>Indexed</Label>
@@ -222,7 +286,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                 </div>
               ))}
               {inputs.length === 0 && (
-                <p className="text-sm text-muted-foreground">No inputs. Click "Add Input" to add one.</p>
+                <p className="text-sm text-muted-foreground">
+                  No inputs. Click "Add Input" to add one.
+                </p>
               )}
             </FlexVertical>
           </div>
@@ -231,7 +297,12 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Label>Outputs</Label>
-                <Button type="button" variant="outline" size="sm" onClick={addOutput}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addOutput}
+                >
                   <Plus className="w-4 h-4 mr-1" />
                   Add Output
                 </Button>
@@ -243,7 +314,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                       <Label>Name</Label>
                       <Input
                         value={output.name || ""}
-                        onChange={(e) => updateOutput(index, "name", e.target.value)}
+                        onChange={(e) =>
+                          updateOutput(index, "name", e.target.value)
+                        }
                         placeholder="returnName"
                       />
                     </div>
@@ -251,7 +324,9 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
                       <Label>Type *</Label>
                       <Input
                         value={output.type}
-                        onChange={(e) => updateOutput(index, "type", e.target.value)}
+                        onChange={(e) =>
+                          updateOutput(index, "type", e.target.value)
+                        }
                         placeholder="uint256"
                         required
                       />
@@ -285,4 +360,3 @@ export const AbiItemForm = ({ type, onSubmit, onCancel, initialItem }: TProps) =
     </Card>
   );
 };
-

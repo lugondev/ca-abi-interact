@@ -13,10 +13,16 @@ type TProps = {
 };
 
 export const OperationsList = ({ contract }: TProps) => {
-  const functions = contractModel.useContractOperations(contract) as TAbiFunction[];
+  const functions = contractModel.useContractOperations(
+    contract
+  ) as TAbiFunction[];
 
   if (functions.length === 0) {
-    return <div className="text-center text-muted-foreground py-4 text-sm">No operations available</div>;
+    return (
+      <div className="text-center text-muted-foreground py-4 text-sm">
+        No operations available
+      </div>
+    );
   }
 
   return (
@@ -26,7 +32,10 @@ export const OperationsList = ({ contract }: TProps) => {
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center justify-between w-full pr-4">
               <span>{item.name}</span>
-              <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="flex-shrink-0"
+              >
                 <DeleteAbiItemButton contract={contract} abiItem={item} />
               </div>
             </div>

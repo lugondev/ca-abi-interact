@@ -16,7 +16,11 @@ export const EventsList = ({ contract }: TProps) => {
   const events = contractModel.useContractEvents(contract) as TAbiEvent[];
 
   if (events.length === 0) {
-    return <div className="text-center text-muted-foreground py-4 text-sm">No events available</div>;
+    return (
+      <div className="text-center text-muted-foreground py-4 text-sm">
+        No events available
+      </div>
+    );
   }
 
   return (
@@ -26,7 +30,10 @@ export const EventsList = ({ contract }: TProps) => {
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center justify-between w-full pr-4">
               <span>{item.name}</span>
-              <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="flex-shrink-0"
+              >
                 <DeleteAbiItemButton contract={contract} abiItem={item} />
               </div>
             </div>
