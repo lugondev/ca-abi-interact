@@ -3,8 +3,8 @@ import { ClientLayout } from "./ClientLayout";
 
 export const metadata: Metadata = {
   title: {
-    default: "Just Smart Contracts",
-    template: "%s | Just Smart Contracts",
+    default: "Contract ABI Interact",
+    template: "%s | Contract ABI Interact",
   },
   description:
     "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
@@ -18,11 +18,11 @@ export const metadata: Metadata = {
     "deploy contracts",
     "blockchain tools",
   ],
-  authors: [{ name: "Just Smart Contracts" }],
-  creator: "Just Smart Contracts",
-  publisher: "Just Smart Contracts",
+  authors: [{ name: "Contract ABI Interact" }],
+  creator: "Contract ABI Interact",
+  publisher: "Contract ABI Interact",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://justsmartcontracts.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://contract-abi-interact.com"
   ),
   alternates: {
     canonical: "/",
@@ -31,8 +31,8 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "/",
-    siteName: "Just Smart Contracts",
-    title: "Just Smart Contracts - Interact with Smart Contracts",
+    siteName: "Contract ABI Interact",
+    title: "Contract ABI Interact - Interact with Smart Contracts",
     description:
       "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
     images: [
@@ -40,17 +40,17 @@ export const metadata: Metadata = {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Just Smart Contracts",
+        alt: "Contract ABI Interact",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Just Smart Contracts - Interact with Smart Contracts",
+    title: "Contract ABI Interact - Interact with Smart Contracts",
     description:
       "Interact with smart contracts across multiple blockchain networks. Deploy, read, write, and monitor smart contracts with ease.",
     images: ["/opengraph-image"],
-    creator: "@justsmartcontracts",
+    creator: "@contractabiinteract",
   },
   robots: {
     index: true,

@@ -1,4 +1,4 @@
-# Just Smart Contracts v2.0
+# Contract ABI Interact v2.0
 
 A modern, feature-rich web application for interacting with smart contracts across multiple blockchain networks. Built with Next.js 16, React 19, and Tailwind CSS v4.
 

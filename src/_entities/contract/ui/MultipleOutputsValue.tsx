@@ -10,20 +10,21 @@ type TProps = {
   shorten?: boolean;
 };
 
-export const MultipleOutputsValue = ({ 
-  outputs, 
-  value, 
-  chain, 
-  shorten = true 
+export const MultipleOutputsValue = ({
+  outputs,
+  value,
+  chain,
+  shorten = true,
 }: TProps) => {
   const { getAddressUrl } = chainModel.useChainExplorer(chain || 1);
-  
+
   // If value is not an array, fallback to single value display
   if (!Array.isArray(value)) {
     // If only one output, display it normally
     if (outputs.length === 1) {
       const output = outputs[0];
-      const explorerUrl = output.type === "address" ? getAddressUrl(value as any) : undefined;
+      const explorerUrl =
+        output.type === "address" ? getAddressUrl(value as any) : undefined;
       return (
         <ParamValue
           abiType={output.type}
@@ -52,8 +53,11 @@ export const MultipleOutputsValue = ({
       {outputs.map((output, index) => {
         const fieldName = output.name || `output${index}`;
         const fieldValue = value[index];
-        const explorerUrl = output.type === "address" ? getAddressUrl(fieldValue as any) : undefined;
-        
+        const explorerUrl =
+          output.type === "address"
+            ? getAddressUrl(fieldValue as any)
+            : undefined;
+
         return (
           <div key={index} className="border-l-2 border-muted pl-3 space-y-1">
             <div className="flex items-start gap-2">
@@ -77,4 +81,3 @@ export const MultipleOutputsValue = ({
     </div>
   );
 };
-
