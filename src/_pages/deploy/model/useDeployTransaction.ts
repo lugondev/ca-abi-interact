@@ -21,25 +21,35 @@ export const useDeployTransaction = () => {
     byteCode: THexString,
     values: string[]
   ) => {
-    if (!walletClient) {
-      notify("Wallet not connected", "error");
-      return;
-    }
+    try {
+      if (!walletClient) {
+        notify("Wallet not connected", "error");
+        return;
+      }
 
-    if (!ctor) {
-      notify("No constructor in ABI", "error");
-      return;
-    }
+      if (!ctor) {
+        notify("No constructor in ABI", "error");
+        return;
+      }
 
-    if (await switchChain()) {
+      // Switch chain if needed
+      await switchChain();
+
       const hash = await walletClient.deployContract({
         abi: [ctor],
         bytecode: byteCode,
         args: values,
       });
       setHash(hash);
-    } else {
-      console.log("Couldn't switch chain");
+    } catch (e) {
+      console.error("Deploy transaction error:", e);
+      const errorMessage =
+        e instanceof Error
+          ? e.message
+          : typeof e === "string"
+          ? e
+          : "Failed to deploy contract";
+      notify(errorMessage, "error");
     }
   };
 

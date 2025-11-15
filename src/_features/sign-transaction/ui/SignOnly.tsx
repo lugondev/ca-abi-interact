@@ -37,10 +37,7 @@ export const SignOnly = ({ contract, abiItem, args }: TProps) => {
       setIsLoading(true);
 
       // Switch chain if needed
-      if (!(await switchChain())) {
-        setIsLoading(false);
-        return;
-      }
+      await switchChain();
 
       if (!walletClient || !publicClient) {
         throw new Error("Wallet not connected");
