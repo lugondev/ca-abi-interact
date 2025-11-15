@@ -24,6 +24,29 @@ export const isAbiItemEvent = (item: TAbiItem): item is AbiEvent =>
 export const isAbiItemConstructor = (item: TAbiItem): item is AbiConstructor =>
   item.type === "constructor";
 
+/**
+ * Get unique signature for an ABI item to use as identifier
+ */
+export const getAbiItemSignature = (item: TAbiItem): string => {
+  if (item.type === "function" || item.type === "event") {
+    const inputs = item.inputs.map((input) => `${input.type} ${input.name || ""}`).join(", ");
+    return `${item.name}(${inputs})`;
+  }
+  if (item.type === "constructor") {
+    const inputs = item.inputs.map((input) => `${input.type} ${input.name || ""}`).join(", ");
+    return `constructor(${inputs})`;
+  }
+  return item.type;
+};
+
+/**
+ * Check if an ABI item is hidden based on its signature
+ */
+export const isAbiItemHidden = (item: TAbiItem, hiddenSignatures: string[] = []): boolean => {
+  const signature = getAbiItemSignature(item);
+  return hiddenSignatures.includes(signature);
+};
+
 export const isArrayType = (param: TAbiParamType) => param.endsWith("]");
 
 export const getArrayItemType = (param: TAbiParamType) => {

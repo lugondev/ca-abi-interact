@@ -24,6 +24,7 @@ export type TContract = {
   address: TAddress;
   name: string;
   abi: TAbiItem[];
+  hiddenAbiItems?: string[]; // Array of function signatures that are hidden
 };
 
 export type TContractWithoutId = Omit<TContract, "id">;

@@ -22,7 +22,8 @@ type TActions = {
     _chain?: TChainId,
     _address?: TAddress,
     _name?: string,
-    _abi?: TAbiItem[]
+    _abi?: TAbiItem[],
+    _hiddenAbiItems?: string[]
   ) => void;
   remove: (_id: TUid) => void;
   setCurrent: (_id: TUid | null) => void;
@@ -58,7 +59,8 @@ const useContractStore = create<TState & TActions>()(
         chain?: TChainId,
         address?: TAddress,
         name?: string,
-        abi?: TAbiItem[]
+        abi?: TAbiItem[],
+        hiddenAbiItems?: string[]
       ) => {
         set((s: TState) => {
           const contract = s.contracts.find((c) => c.id == id);
@@ -74,6 +76,9 @@ const useContractStore = create<TState & TActions>()(
             }
             if (abi) {
               contract.abi = abi;
+            }
+            if (hiddenAbiItems !== undefined) {
+              contract.hiddenAbiItems = hiddenAbiItems;
             }
           }
         });

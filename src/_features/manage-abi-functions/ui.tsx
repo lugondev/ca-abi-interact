@@ -29,9 +29,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Eye, EyeOff } from "lucide-react";
 import { TContract, TAbiItem, contractModel } from "@entities/contract";
 import { useManageAbiFunctions } from "./model";
+import { getAbiItemSignature, isAbiItemHidden } from "@entities/contract/lib";
 
 type TProps = {
   contract: TContract;
@@ -44,17 +45,6 @@ const getAbiItemTypeLabel = (item: TAbiItem): string => {
   return item.type;
 };
 
-const getAbiItemSignature = (item: TAbiItem): string => {
-  if (item.type === "function" || item.type === "event") {
-    const inputs = item.inputs.map((input) => `${input.type} ${input.name || ""}`).join(", ");
-    return `${item.name}(${inputs})`;
-  }
-  if (item.type === "constructor") {
-    const inputs = item.inputs.map((input) => `${input.type} ${input.name || ""}`).join(", ");
-    return `constructor(${inputs})`;
-  }
-  return item.type;
-};
 
 const getAbiItemDisplayName = (item: TAbiItem): string => {
   if (item.type === "function" || item.type === "event") {
@@ -110,6 +100,30 @@ const DeleteButton = ({ item, index, onDelete }: DeleteButtonProps) => {
   );
 };
 
+type HideButtonProps = {
+  item: TAbiItem;
+  isHidden: boolean;
+  onToggle: (item: TAbiItem) => void;
+};
+
+const HideButton = ({ item, isHidden, onToggle }: HideButtonProps) => {
+  return (
+    <Button
+      size="sm"
+      variant="ghost"
+      className="h-6 w-6 p-0"
+      onClick={() => onToggle(item)}
+      title={isHidden ? "Show function" : "Hide function"}
+    >
+      {isHidden ? (
+        <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+      ) : (
+        <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+      )}
+    </Button>
+  );
+};
+
 export const ManageAbiFunctions = ({ contract: initialContract }: TProps) => {
   // Get the latest contract from store to ensure we have updated data
   const { contracts } = contractModel.useContracts();
@@ -118,7 +132,7 @@ export const ManageAbiFunctions = ({ contract: initialContract }: TProps) => {
     [contracts, initialContract.id]
   );
 
-  const { addAbiItem, removeAbiItem } = useManageAbiFunctions(contract);
+  const { addAbiItem, removeAbiItem, toggleHideAbiItem } = useManageAbiFunctions(contract);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newAbiItemJson, setNewAbiItemJson] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -185,34 +199,52 @@ export const ManageAbiFunctions = ({ contract: initialContract }: TProps) => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[10%]">Type</TableHead>
-              <TableHead className="w-[30%]">Name</TableHead>
-              <TableHead className="w-[60%]">Signature</TableHead>
+              <TableHead className="w-[25%]">Name</TableHead>
+              <TableHead className="w-[55%]">Signature</TableHead>
+              <TableHead className="w-[10%]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {contract.abi.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
                   No ABI items. Add your first function above.
                 </TableCell>
               </TableRow>
             ) : (
-              contract.abi.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Badge variant="outline">{getAbiItemTypeLabel(item)}</Badge>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    <div className="flex items-center gap-2">
-                      <span>{getAbiItemDisplayName(item)}</span>
-                      <DeleteButton item={item} index={index} onDelete={removeAbiItem} />
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-mono text-xs">
-                    {getAbiItemSignature(item)}
-                  </TableCell>
-                </TableRow>
-              ))
+              contract.abi.map((item, index) => {
+                const isHidden = isAbiItemHidden(item, contract.hiddenAbiItems);
+                return (
+                  <TableRow key={index} className={isHidden ? "opacity-50" : ""}>
+                    <TableCell>
+                      <Badge variant="outline">{getAbiItemTypeLabel(item)}</Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        <span>{getAbiItemDisplayName(item)}</span>
+                        {isHidden && (
+                          <Badge variant="secondary" className="text-xs">
+                            Hidden
+                          </Badge>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {getAbiItemSignature(item)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <HideButton
+                          item={item}
+                          isHidden={isHidden}
+                          onToggle={toggleHideAbiItem}
+                        />
+                        <DeleteButton item={item} index={index} onDelete={removeAbiItem} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
