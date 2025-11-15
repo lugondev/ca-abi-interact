@@ -1,6 +1,7 @@
 import { AddContractButton } from "@features/add-contract";
 import { RemoveContractButton } from "@features/remove-contract";
 import { EditContractButton } from "@features/edit-contract";
+import { DuplicateContractButton } from "@features/duplicate-contract";
 import { TContract, contractModel } from "@entities/contract";
 import { useCurrentChainContracts } from "../model";
 import { SmallCard } from "./SmallCard";
@@ -10,6 +11,7 @@ import { Card } from "@/components/ui/card";
 const EditButtons = ({ contract }: { contract: TContract }) => {
   return (
     <div className="flex gap-2">
+      <DuplicateContractButton contract={contract} />
       <EditContractButton contract={contract} />
       <RemoveContractButton contract={contract} />
     </div>
