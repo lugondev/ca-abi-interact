@@ -1,6 +1,6 @@
 "use client";
 
-import { DeployPage } from "@pages/deploy";
+import { AbiBuilderPage } from "@pages/abi-builder";
 
-export default DeployPage;
+export default AbiBuilderPage;
 

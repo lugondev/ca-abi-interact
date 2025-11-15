@@ -2,7 +2,6 @@ import { TAbiParam } from "../model/types";
 import { ParamValue } from "./ParamValue";
 import { TChainId } from "@shared/lib/web3";
 import { chainModel } from "@entities/chain";
-import { isArrayType } from "../lib";
 
 type TProps = {
   outputs: readonly TAbiParam[];

@@ -1,4 +1,4 @@
-import { TContract, contractModel } from "@entities/contract";
+import { TContract, contractModel, TAbiFunction } from "@entities/contract";
 import { GetterCall } from "@features/execute-contract";
 import {
   Accordion,
@@ -13,7 +13,7 @@ type TProps = {
 };
 
 export const CallsList = ({ contract }: TProps) => {
-  const functions = contractModel.useContractParamCalls(contract);
+  const functions = contractModel.useContractParamCalls(contract) as TAbiFunction[];
 
   if (functions.length === 0) {
     return <div className="text-center text-muted-foreground py-4 text-sm">No calls available</div>;

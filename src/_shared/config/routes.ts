@@ -9,7 +9,7 @@ export const Routes: TRouteInfo[] = [
     path: "/",
   },
   {
-    title: "Deploy",
+    title: "ABI Builder",
     path: "/deploy",
   },
   // {

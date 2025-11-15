@@ -1,6 +1,6 @@
 import { AbiFunction } from "abitype";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { TContract, contractModel } from "@entities/contract";
+import { TContract, contractModel, TAbiFunction } from "@entities/contract";
 import { PropertyCall } from "@features/execute-contract";
 import { GlobalRefreshButton } from "@shared/ui/GlobalRefreshButton";
 import { DeleteAbiItemButton } from "@shared/ui/DeleteAbiItemButton";
@@ -10,7 +10,7 @@ type TProps = {
 };
 
 export const PropertiesList = ({ contract }: TProps) => {
-  const functions = contractModel.useContractProperties(contract);
+  const functions = contractModel.useContractProperties(contract) as TAbiFunction[];
 
   if (functions.length === 0) {
     return (

@@ -1,4 +1,4 @@
-import { TContract, contractModel } from "@entities/contract";
+import { TContract, contractModel, TAbiFunction } from "@entities/contract";
 import { TransactionOptions } from "@features/sign-transaction";
 import {
   Accordion,
@@ -13,7 +13,7 @@ type TProps = {
 };
 
 export const OperationsList = ({ contract }: TProps) => {
-  const functions = contractModel.useContractOperations(contract);
+  const functions = contractModel.useContractOperations(contract) as TAbiFunction[];
 
   if (functions.length === 0) {
     return <div className="text-center text-muted-foreground py-4 text-sm">No operations available</div>;

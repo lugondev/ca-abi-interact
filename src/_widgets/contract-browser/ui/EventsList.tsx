@@ -1,4 +1,4 @@
-import { TContract, contractModel } from "@entities/contract";
+import { TContract, contractModel, TAbiEvent } from "@entities/contract";
 import { FetchEvents } from "@features/fetch-events";
 import {
   Accordion,
@@ -13,7 +13,7 @@ type TProps = {
 };
 
 export const EventsList = ({ contract }: TProps) => {
-  const events = contractModel.useContractEvents(contract);
+  const events = contractModel.useContractEvents(contract) as TAbiEvent[];
 
   if (events.length === 0) {
     return <div className="text-center text-muted-foreground py-4 text-sm">No events available</div>;
