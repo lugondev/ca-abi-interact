@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { TContract, contractModel } from "@entities/contract";
 import { PropertyCall } from "@features/execute-contract";
 import { GlobalRefreshButton } from "@shared/ui/GlobalRefreshButton";
+import { DeleteAbiItemButton } from "@shared/ui/DeleteAbiItemButton";
 
 type TProps = {
   contract: TContract;
@@ -36,7 +37,12 @@ export const PropertiesList = ({ contract }: TProps) => {
           <TableBody>
             {functions.map((abiItem) => (
               <TableRow key={abiItem.name}>
-                <TableCell className="font-medium align-top">{abiItem.name}</TableCell>
+                <TableCell className="font-medium align-top">
+                  <div className="flex items-center gap-2">
+                    <span>{abiItem.name}</span>
+                    <DeleteAbiItemButton contract={contract} abiItem={abiItem} />
+                  </div>
+                </TableCell>
                 <TableCell className="min-w-0 max-w-0">
                   <PropertyCall contract={contract} abiItem={abiItem} />
                 </TableCell>

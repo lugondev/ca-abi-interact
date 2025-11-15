@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { DeleteAbiItemButton } from "@shared/ui/DeleteAbiItemButton";
 
 type TProps = {
   contract: TContract;
@@ -22,7 +23,14 @@ export const EventsList = ({ contract }: TProps) => {
     <Accordion type="single" collapsible className="w-full">
       {events.map((item, index) => (
         <AccordionItem key={index} value={`item-${index}`}>
-          <AccordionTrigger>{item.name}</AccordionTrigger>
+          <AccordionTrigger className="hover:no-underline">
+            <div className="flex items-center justify-between w-full pr-4">
+              <span>{item.name}</span>
+              <div onClick={(e) => e.stopPropagation()} className="flex-shrink-0">
+                <DeleteAbiItemButton contract={contract} abiItem={item} />
+              </div>
+            </div>
+          </AccordionTrigger>
           <AccordionContent>
             <FetchEvents contract={contract} event={item} />
           </AccordionContent>
