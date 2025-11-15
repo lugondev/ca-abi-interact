@@ -37,11 +37,12 @@ const findAbiItemIndex = (contract: TContract, targetItem: TAbiItem): number => 
     // Match by type and name
     if (item.type !== targetItem.type) return false;
     
-    if (item.type === "function" || item.type === "event") {
+    if ((item.type === "function" || item.type === "event") && 
+        (targetItem.type === "function" || targetItem.type === "event")) {
       return item.name === targetItem.name;
     }
     
-    if (item.type === "constructor") {
+    if (item.type === "constructor" && targetItem.type === "constructor") {
       // For constructor, compare inputs
       if (item.inputs.length !== targetItem.inputs.length) return false;
       return item.inputs.every(
