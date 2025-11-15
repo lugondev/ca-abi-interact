@@ -457,11 +457,9 @@
     ]
   },
   {
-    "name": "MegaETH Mainnet",
+    "name": "MegaETH Mainnet Not Available now",
     "chain": "ETH",
-    "rpc": [
-      "https://rpc.megaeth.org"
-    ],
+    "rpc": [],
     "faucets": [],
     "nativeCurrency": {
       "name": "Ether",
@@ -473,5 +471,30 @@
     "chainId": 4326,
     "networkId": 4326,
     "explorers": []
+  },
+  {
+    "name": "MegaETH Testnet",
+    "chain": "ETH",
+    "rpc": [
+      "https://carrot.megaeth.com/rpc"
+    ],
+    "faucets": [],
+    "nativeCurrency": {
+      "name": "Ether",
+      "symbol": "ETH",
+      "decimals": 18
+    },
+    "infoURL": "https://megaeth.org",
+    "shortName": "megaeth-testnet",
+    "chainId": 6342,
+    "networkId": 6342,
+    "slip44": 1,
+    "explorers": [
+      {
+        "name": "megaexplorer",
+        "url": "https://megaexplorer.xyz",
+        "standard": "EIP3091"
+      }
+    ]
   }
 ]
