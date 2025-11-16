@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Settings } from "lucide-react";
 import { RefreshSettings } from "./RefreshSettings";
+import { CustomChainsSettings } from "./CustomChainsSettings";
+import { ChainRpcSettings } from "./ChainRpcSettings";
 
 export const SettingsDialog = () => {
   const [open, setOpen] = useState(false);
@@ -15,7 +17,7 @@ export const SettingsDialog = () => {
           <span className="sr-only">Settings</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>
@@ -24,6 +26,8 @@ export const SettingsDialog = () => {
         </DialogHeader>
         <div className="space-y-4">
           <RefreshSettings />
+          <ChainRpcSettings />
+          <CustomChainsSettings />
         </div>
       </DialogContent>
     </Dialog>

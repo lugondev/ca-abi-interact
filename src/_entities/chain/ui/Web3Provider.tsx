@@ -32,7 +32,9 @@ export const Web3Provider = ({ chain, children }: TProps) => {
   }, []);
 
   const wagmiConfig = useMemo(() => {
-    const alchemyUrl = `https://${wagmiChain.network || wagmiChain.name.toLowerCase()}.g.alchemy.com/v2/${AlchemyKey}`;
+    // Use the first RPC from the chain definition (which includes custom RPCs)
+    const rpcUrl = wagmiChain.rpcUrls.default.http[0] || 
+                   (AlchemyKey ? `https://${wagmiChain.network || wagmiChain.name.toLowerCase()}.g.alchemy.com/v2/${AlchemyKey}` : undefined);
     
     // Create MetaMask connector using injected with target
     const metaMaskConnector = injected({ target: 'metaMask' });
@@ -41,7 +43,7 @@ export const Web3Provider = ({ chain, children }: TProps) => {
       chains: [wagmiChain] as const,
       connectors: isClient ? [metaMaskConnector] : [],
       transports: {
-        [wagmiChain.id]: http(AlchemyKey ? alchemyUrl : undefined),
+        [wagmiChain.id]: http(rpcUrl),
       },
     });
   }, [wagmiChain, isClient]);

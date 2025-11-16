@@ -1,5 +1,7 @@
 import { TChain } from "./types";
 import DefaultChainsRaw from "./defaultChains.json";
+import { useCustomChains } from "./useCustomChains";
+import { useMemo } from "react";
 
 const rawToTChain = (item: any): TChain => {
   return {
@@ -51,9 +53,38 @@ type TChainListContext =
     };
 
 export const useChainList = (): TChainListContext => {
-  // Always use local defaultChains.json instead of fetching from external API
-  // This ensures we only show the curated list of 10 popular chains
-  return { loading: false, chains: sortChainsByPriority(DefaultChains) };
+  const { customChains, chainRpcOverrides } = useCustomChains();
+  
+  const allChains = useMemo(() => {
+    // Merge default chains with custom chains
+    const chainMap = new Map<number, TChain>();
+    
+    // Add default chains
+    DefaultChains.forEach((chain) => {
+      chainMap.set(chain.chainId, chain);
+    });
+    
+    // Add/override with custom chains
+    customChains.forEach((chain) => {
+      chainMap.set(chain.chainId, chain);
+    });
+    
+    // Apply RPC overrides to existing chains
+    Object.entries(chainRpcOverrides).forEach(([chainIdStr, rpc]) => {
+      const chainId = Number(chainIdStr);
+      const chain = chainMap.get(chainId);
+      if (chain) {
+        chainMap.set(chainId, {
+          ...chain,
+          rpc,
+        });
+      }
+    });
+    
+    return Array.from(chainMap.values());
+  }, [customChains, chainRpcOverrides]);
+  
+  return { loading: false, chains: sortChainsByPriority(allChains) };
 };
 
 export const useChainListSafe = () => {
