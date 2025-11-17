@@ -37,28 +37,43 @@ pnpm dev
 - `pnpm lint` - Run ESLint
 - `pnpm ts` - Type check with TypeScript
 
+## 🧭 Screens at a Glance
+
+- **Home / Contract Browser (`/`)** - Manage saved contracts per chain, browse ABI tabs, run reads/writes, and stream events in one place.
+- **ABI Builder (`/abi-builder`)** - Compose ABI items visually, import/export JSON, and encode call or deployment data into ready-to-use hex blobs.
+
 ## ✨ Features
 
 ### Core Functionality
-- 🔗 **Multi-Chain Support** - Connect to multiple blockchain networks
-- 📝 **Contract Interaction** - Read from and write to smart contracts
-- 🚀 **Contract Deployment** - Deploy new contracts directly from the interface
-- 📊 **Event Monitoring** - Fetch and filter blockchain events
-- 💼 **Wallet Integration** - Connect with popular Web3 wallets
-- 🔍 **Contract Browser** - Explore contract functions, events, and properties
+- 🔗 **Chain-aware contract workspace** - Save ABIs per network, add/edit/duplicate/remove entries, and toggle noisy ABI items while the Zustand store persists your library and current selection locally.
+- 🗂️ **Sidebar & quick actions** - The contracts list surfaces Add/Duplicate/Edit/Remove controls plus explorer shortcuts, making it easy to swap between contracts without leaving the page.
+- 🧭 **Tabbed contract browser** - Switch between Properties (auto/one-click refresh), Calls (view functions with parameters), Operations (state-changing transactions), and Events (log streaming) to cover every ABI surface.
+
+### Transactions & Event Tooling
+- ✍️ **Transaction builder with dual modes** - Generate call data from ABI inputs, auto-fill to/from/value/nonce/gas via wagmi + viem helpers, then either *Sign & Broadcast* or *Sign Only* to obtain serialized raw transactions, signatures, and downloadable tx JSON.
+- 📡 **Event explorer** - Filter logs by indexed topics and block ranges, auto-refresh the latest results, and inspect payloads in a paginated table.
+- 🔁 **Refresh controls** - Use the global refresh button, per-call refreshers, or configurable auto-refresh intervals to keep property values and events in sync.
+
+### ABI Builder & Hex Tools
+- 🧱 **Visual ABI composer** - Add functions, events, and constructors through guided forms, import existing JSON, update items inline, and export or copy the assembled ABI whenever you need it.
+- 🧮 **Hex generator** - Encode function calls or deployment bytecode for any ABI item, copy/share the output, and inspect length/byte metrics without leaving the builder.
+
+### Settings & Customization
+- 🌐 **Custom chains & RPC overrides** - Extend the built-in network registry, override RPC endpoints per chain, and swap networks from a searchable combobox.
+- ⏱️ **Refresh profiles** - Toggle automatic refresh intervals for contract properties/events or stick to manual “Refresh All” control based on your workflow.
+- 💾 **Persistent preferences** - Custom chains, RPC overrides, contracts, and refresh settings survive reloads thanks to local storage–backed stores.
 
 ### User Experience
-- 🎨 **Modern UI** - Clean interface built with Tailwind CSS v4 and Radix UI
-- 📱 **Responsive Design** - Works seamlessly on desktop and mobile
-- ⚡ **Fast Performance** - Optimized with Next.js 16 and Turbopack
-- 🔔 **Real-time Notifications** - Transaction status and error handling
-- 💾 **State Persistence** - Contract and chain configurations saved locally
+- 🎯 Sticky header with navigation, wallet status, chain selector, and settings dialog, plus a drawer-based navigation pattern for mobile screens.
+- 🧱 Sidebar + main panel layout keeps contract context visible while browsing functions, with accordions and tables powered by Radix UI + shadcn components.
+- 🔔 Wallet menu offers explorer shortcuts, copy-to-clipboard, and disconnect actions, while notifications surface transaction send/sign outcomes.
+- ♿ Accessible comboboxes, dialogs, accordions, and tabs provide a polished UX built on Tailwind CSS v4 and Radix primitives.
 
 ### Developer Experience
-- 🏗️ **Feature-Sliced Design** - Modular architecture for maintainability
-- 🔒 **Type Safety** - Full TypeScript support with strict typing
-- 🧪 **Error Boundaries** - Graceful error handling and recovery
-- 📦 **Component Library** - Reusable UI components with shadcn/ui
+- 🏗️ Feature-Sliced architecture (`app`, `_entities`, `_features`, `_widgets`, `_pages`, `_shared`) keeps domain logic, UI, and widgets isolated for easier scaling.
+- 🔒 Zustand (with `persist` + Immer) powers client-side state, TanStack Query handles caching inside `Web3Provider`, and strict TypeScript typing covers the entire surface area.
+- ⚙️ Wagmi + viem unify RPC access, MetaMask connection, chain switching, gas estimation, and transaction signing across every supported network.
+- 🧰 Tailwind CSS v4, shadcn/ui, Lucide, ESLint 9, Turbopack, and TypeScript 5.7 create a modern DX for rapid iteration.
 
 ## 🛠️ Tech Stack
 
