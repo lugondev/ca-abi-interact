@@ -12,7 +12,9 @@ export const Footer = () => {
           <Separator orientation="vertical" className="h-4" />
           <ExternalLink href="https://x.com/bld3v">Twitter</ExternalLink>
           <Separator orientation="vertical" className="h-4" />
-          <p className="text-xs">Donations: 0x0</p>
+          <p className="text-xs">
+            Donations: 0x4b4a931eede296628452d88e0cb4ed64663e3ef5
+          </p>
         </div>
       </div>
     </footer>
