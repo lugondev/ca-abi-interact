@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +10,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { TContract } from "@entities/contract";
 import { useRemoveContract } from "./model";
@@ -20,47 +19,54 @@ type TProps = {
 };
 
 export const RemoveContractButton = ({ contract }: TProps) => {
+  const [open, setOpen] = useState(false);
   const remove = useRemoveContract(contract);
 
   const onConfirm = useCallback(
     (e?: React.MouseEvent<HTMLElement>) => {
       e?.stopPropagation();
       remove();
+      setOpen(false);
     },
     [remove]
   );
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={(e) => e.stopPropagation()}
-          className="h-6 w-6 p-0"
-          title="Delete contract"
-        >
-          <Trash2 className="h-3 w-3 text-destructive" />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Remove contract</AlertDialogTitle>
-          <AlertDialogDescription>
-            Really delete contract - {contract.name}? This action cannot be
-            undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>No</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={onConfirm}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-          >
-            Yes
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+        className="h-6 w-6 p-0 relative z-10"
+        title="Delete contract"
+      >
+        <Trash2 className="h-3 w-3 text-destructive" />
+      </Button>
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove contract</AlertDialogTitle>
+            <AlertDialogDescription>
+              Really delete contract - {contract.name}? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+              No
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

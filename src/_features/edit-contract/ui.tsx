@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -33,7 +32,10 @@ export const EditContractButton = ({ contract: initialContract }: TProps) => {
   const [formVisible, setFormVisible] = useState(false);
   const editContract = useEditContact(contract);
 
-  const showModal = () => setFormVisible(true);
+  const showModal = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setFormVisible(true);
+  };
   const hideModal = () => setFormVisible(false);
 
   const onSubmit = useCallback(
@@ -45,39 +47,39 @@ export const EditContractButton = ({ contract: initialContract }: TProps) => {
   );
 
   return (
-    <Dialog open={formVisible} onOpenChange={setFormVisible}>
-      <DialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={showModal}
-          className="h-6 w-6 p-0"
-          title="Edit contract"
-        >
-          <Pencil className="h-3 w-3" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit contract</DialogTitle>
-        </DialogHeader>
-        <Tabs defaultValue="general" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="abi">ABI Functions</TabsTrigger>
-          </TabsList>
-          <TabsContent value="general" className="mt-4">
-            <ContractForm
-              value={contract}
-              buttonText="Update"
-              onSubmit={onSubmit}
-            />
-          </TabsContent>
-          <TabsContent value="abi" className="mt-4">
-            <ManageAbiFunctions contract={contract} />
-          </TabsContent>
-        </Tabs>
-      </DialogContent>
-    </Dialog>
+    <>
+      <Button
+        size="sm"
+        variant="ghost"
+        onClick={showModal}
+        className="h-6 w-6 p-0 relative z-10"
+        title="Edit contract"
+      >
+        <Pencil className="h-3 w-3" />
+      </Button>
+      <Dialog open={formVisible} onOpenChange={setFormVisible}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit contract</DialogTitle>
+          </DialogHeader>
+          <Tabs defaultValue="general" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="abi">ABI Functions</TabsTrigger>
+            </TabsList>
+            <TabsContent value="general" className="mt-4">
+              <ContractForm
+                value={contract}
+                buttonText="Update"
+                onSubmit={onSubmit}
+              />
+            </TabsContent>
+            <TabsContent value="abi" className="mt-4">
+              <ManageAbiFunctions contract={contract} />
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
