@@ -7,6 +7,7 @@ import { SetCurrentChain } from "@features/set-current-chain";
 import { WalletCard, walletModel } from "@entities/wallet";
 import { ConnectButton } from "@features/connect-wallet";
 import { SettingsDialog } from "@features/settings";
+import { ThemeToggle } from "@features/theme-toggle";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -65,9 +66,15 @@ const MobileNav = () => {
               <span className="text-sm font-medium">Network</span>
               <SetCurrentChain />
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="text-sm font-medium">Settings</span>
-              <SettingsDialog />
+            <div className="flex items-center gap-2">
+              <div className="flex flex-col gap-2 flex-1">
+                <span className="text-sm font-medium">Settings</span>
+                <SettingsDialog />
+              </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm font-medium">Theme</span>
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>
@@ -78,24 +85,41 @@ const MobileNav = () => {
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto max-w-screen-2xl">
-        <div className="flex h-16 items-center justify-between gap-2 sm:gap-4 px-3 sm:px-4 md:px-6">
-          <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-50 w-full border-b border-border/30 bg-background/85 backdrop-blur-xl supports-[backdrop-filter]:bg-background/75">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/8 via-accent/5 to-success/6 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+      <div className="container mx-auto max-w-screen-2xl relative">
+        <div className="flex h-20 items-center justify-between gap-2 sm:gap-4 px-3 sm:px-4 md:px-6">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <MobileNav />
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="font-bold text-lg">SmartContracts</span>
+            <Link href="/" className="flex items-center space-x-3 group transition-all">
+              <div className="relative">
+                <div className="absolute inset-0 bg-primary/40 blur-2xl group-hover:bg-primary/60 transition-all duration-500" />
+                <div className="relative w-12 h-12 rounded-lg bg-gradient-to-br from-primary via-accent to-success flex items-center justify-center shadow-2xl shadow-primary/50 group-hover:shadow-primary/70 transition-all duration-300 border-2 border-primary/30 group-hover:border-primary/50">
+                  <span className="text-white font-display font-black text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">SC</span>
+                </div>
+              </div>
+              <div className="hidden lg:flex flex-col">
+                <span className="font-display font-bold text-xl tracking-tight text-foreground group-hover:text-primary transition-colors duration-300">
+                  SmartContracts
+                </span>
+                <span className="font-mono text-[11px] text-muted-foreground uppercase tracking-[0.15em] group-hover:text-accent transition-colors duration-300">
+                  ▸ ABI Interact
+                </span>
+              </div>
             </Link>
           </div>
-          
+
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-4 ml-auto">
+          <div className="hidden md:flex items-center gap-1.5 lg:gap-3 ml-auto min-w-0">
             <Navigation pages={Routes} />
+            <div className="hidden lg:block h-8 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
             <WalletBlock />
-            <Separator orientation="vertical" className="h-6" />
-            <div className="min-w-[200px]">
+            <div className="hidden lg:block h-8 w-px bg-gradient-to-b from-transparent via-border to-transparent" />
+            <div className="w-[180px] lg:min-w-[220px] shrink-0">
               <SetCurrentChain />
             </div>
+            <ThemeToggle />
             <SettingsDialog />
           </div>
         </div>

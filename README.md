@@ -41,6 +41,7 @@ pnpm dev
 
 - **Home / Contract Browser (`/`)** - Manage saved contracts per chain, browse ABI tabs, run reads/writes, and stream events in one place.
 - **ABI Builder (`/abi-builder`)** - Compose ABI items visually, import/export JSON, and encode call or deployment data into ready-to-use hex blobs.
+- **Tools (`/tools`)** - Access a collection of blockchain utilities including unit converters, calldata decoder, epoch converter, and encoding tools.
 
 ## ✨ Features
 
@@ -58,6 +59,14 @@ pnpm dev
 - 🧱 **Visual ABI composer** - Add functions, events, and constructors through guided forms, import existing JSON, update items inline, and export or copy the assembled ABI whenever you need it.
 - 🧮 **Hex generator** - Encode function calls or deployment bytecode for any ABI item, copy/share the output, and inspect length/byte metrics without leaving the builder.
 
+### Developer Tools & Utilities
+- 🔧 **Eth Unit Converter** - Convert between wei, gwei, and ether with real-time conversion and copy-to-clipboard functionality.
+- 💱 **Token Unit Converter** - Convert token amounts based on custom decimals for any ERC-20 token.
+- ⏰ **Epoch Converter** - Convert between Unix timestamps and human-readable dates in both directions.
+- 🔢 **Base Converter** - Convert numbers between decimal, hexadecimal, binary, and octal representations.
+- 📝 **String <> Bytes32 Converter** - Encode strings to bytes32 format and decode bytes32 back to readable strings.
+- 🔍 **Calldata Decoder** - Decode raw transaction calldata using contract ABIs to inspect function calls and parameters.
+
 ### Settings & Customization
 - 🌐 **Custom chains & RPC overrides** - Extend the built-in network registry, override RPC endpoints per chain, and swap networks from a searchable combobox.
 - ⏱️ **Refresh profiles** - Toggle automatic refresh intervals for contract properties/events or stick to manual “Refresh All” control based on your workflow.
@@ -65,6 +74,7 @@ pnpm dev
 
 ### User Experience
 - 🎯 Sticky header with navigation, wallet status, chain selector, and settings dialog, plus a drawer-based navigation pattern for mobile screens.
+- 🌓 **Dark/Light theme toggle** - Switch between dark and light modes with system preference detection and persistent theme selection.
 - 🧱 Sidebar + main panel layout keeps contract context visible while browsing functions, with accordions and tables powered by Radix UI + shadcn components.
 - 🔔 Wallet menu offers explorer shortcuts, copy-to-clipboard, and disconnect actions, while notifications surface transaction send/sign outcomes.
 - ♿ Accessible comboboxes, dialogs, accordions, and tabs provide a polished UX built on Tailwind CSS v4 and Radix primitives.
@@ -112,6 +122,13 @@ The project follows **Feature-Sliced Design** methodology for better maintainabi
 ```
 ├── app/                    # Next.js App Router pages
 │   ├── deploy/            # Contract deployment page
+│   ├── tools/             # Developer tools & utilities
+│   │   ├── base-converter/       # Number base conversion
+│   │   ├── calldata-decoder/     # Transaction calldata decoder
+│   │   ├── epoch-converter/      # Unix timestamp converter
+│   │   ├── eth-unit-converter/   # ETH unit conversions
+│   │   ├── string-bytes32/       # String/bytes32 encoding
+│   │   └── token-unit-converter/ # Token decimal conversions
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Home page
@@ -133,7 +150,8 @@ The project follows **Feature-Sliced Design** methodology for better maintainabi
 │   │   ├── fetch-events/     # Event monitoring
 │   │   ├── remove-contract/  # Contract removal
 │   │   ├── set-current-chain/# Chain switching
-│   │   └── sign-transaction/ # Transaction signing
+│   │   ├── sign-transaction/ # Transaction signing
+│   │   └── theme-toggle/     # Dark/light theme switching
 │   ├── _pages/           # Page components
 │   │   ├── browser/      # Contract browser page
 │   │   ├── deploy/       # Deployment page
@@ -141,6 +159,7 @@ The project follows **Feature-Sliced Design** methodology for better maintainabi
 │   ├── _shared/          # Shared utilities
 │   │   ├── config/       # Application configuration
 │   │   ├── lib/          # Utility libraries
+│   │   │   └── theme/    # Theme management utilities
 │   │   └── ui/           # Shared UI components
 │   └── _widgets/         # Complex UI widgets
 │       ├── contract-browser/  # Contract exploration widget

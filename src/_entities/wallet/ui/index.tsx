@@ -48,10 +48,11 @@ export const WalletCard = ({ wallet }: TProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex gap-2 items-center px-2 sm:px-3 py-1.5 rounded-2xl text-xs sm:text-sm bg-blue-50 border border-blue-800 hover:bg-blue-100 transition-colors cursor-pointer">
+        <button className="relative group flex gap-2 items-center px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-mono font-semibold bg-success/10 border-2 border-success/40 text-success hover:bg-success/20 hover:border-success/60 hover:shadow-lg hover:shadow-success/20 transition-all duration-300 cursor-pointer uppercase tracking-wide">
+          <div className="absolute inset-0 bg-gradient-to-r from-success/0 via-success/10 to-success/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg" />
           <AddressIcon size="small" address={wallet} />
-          <span>{shortAddress}</span>
-          <ChevronDown className="h-3 w-3 opacity-50" />
+          <span className="relative z-10">{shortAddress}</span>
+          <ChevronDown className="h-3 w-3 opacity-70 relative z-10" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

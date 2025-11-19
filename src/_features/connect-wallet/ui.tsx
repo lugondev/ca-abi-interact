@@ -5,8 +5,8 @@ export const ConnectButton = () => {
   const connect = useConnectWallet();
 
   return (
-    <Button onClick={() => connect()} size="default" variant="default">
-      Connect wallet
+    <Button onClick={() => connect()} size="default" variant="outline">
+      Connect Wallet
     </Button>
   );
 };
