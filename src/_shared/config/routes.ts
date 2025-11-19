@@ -12,5 +12,9 @@ export const Routes: TRouteInfo[] = [
     title: "ABI Builder",
     path: "/abi-builder",
   },
+  {
+    title: "Tools",
+    path: "/tools",
+  },
 ];
 
