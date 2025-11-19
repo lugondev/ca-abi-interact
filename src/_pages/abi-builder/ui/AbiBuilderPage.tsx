@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TAbiItem } from "@entities/contract";
+import { useAlert } from "@shared/lib/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -35,6 +36,7 @@ const getAbiItemDisplayName = (item: TAbiItem): string => {
 };
 
 export const AbiBuilderPage = () => {
+  const { showAlert } = useAlert();
   const {
     abiItems,
     addAbiItem,
@@ -71,7 +73,7 @@ export const AbiBuilderPage = () => {
       setImportText("");
       setShowImport(false);
     } catch (error) {
-      alert("Invalid ABI JSON");
+      showAlert("Invalid ABI JSON", "Import Error");
     }
   };
 

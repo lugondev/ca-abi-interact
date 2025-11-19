@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { TAbiItem, TAbiParam } from "@entities/contract";
+import { useAlert } from "@shared/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -90,6 +91,7 @@ export const AbiItemForm = ({
   onCancel,
   initialItem,
 }: TProps) => {
+  const { showAlert } = useAlert();
   const [name, setName] = useState(() => getInitialName(initialItem));
   const [stateMutability, setStateMutability] = useState<
     "pure" | "view" | "nonpayable" | "payable"
@@ -160,7 +162,7 @@ export const AbiItemForm = ({
   const handleSubmit = () => {
     if (type === "function") {
       if (!name.trim()) {
-        alert("Function name is required");
+        showAlert("Function name is required", "Validation Error");
         return;
       }
       const item: TAbiItem = {
@@ -174,7 +176,7 @@ export const AbiItemForm = ({
       resetForm();
     } else if (type === "event") {
       if (!name.trim()) {
-        alert("Event name is required");
+        showAlert("Event name is required", "Validation Error");
         return;
       }
       const item: TAbiItem = {

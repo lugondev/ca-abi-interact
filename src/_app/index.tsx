@@ -5,6 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorPage } from "@pages/error";
 import { Layout } from "@widgets/layout";
 import { NotificationsProvider } from "@shared/lib/notify";
+import { AlertProvider } from "@shared/lib/alert";
 import { Web3LoadingGuard } from "./Web3LoadingGuard";
 
 export const metadata = {
@@ -22,9 +23,11 @@ const App = ({ Component, pageProps }: AppProps) => {
       <ErrorBoundary fallback={<ErrorPage />}>
         <Web3LoadingGuard>
           <NotificationsProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <AlertProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </AlertProvider>
           </NotificationsProvider>
         </Web3LoadingGuard>
       </ErrorBoundary>
