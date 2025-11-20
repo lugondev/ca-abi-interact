@@ -30,7 +30,7 @@ export const AddressValue = ({
   };
 
   return (
-    <div className="flex items-center gap-1 min-w-0">
+    <div className="flex items-center gap-1 min-w-0 relative">
       <AddressIcon address={value} size="small" className="flex-shrink-0" />
       <span className="font-mono text-xs min-w-0">
         {explorerUrl ? (
@@ -48,7 +48,7 @@ export const AddressValue = ({
         onClick={handleCopy}
         variant="ghost"
         size="sm"
-        className="flex-shrink-0 h-5 w-5 p-0"
+        className="flex-shrink-0 h-5 w-5 p-0 relative z-20"
       >
         {copied ? (
           <Check className="h-2.5 w-2.5 text-green-500" />
